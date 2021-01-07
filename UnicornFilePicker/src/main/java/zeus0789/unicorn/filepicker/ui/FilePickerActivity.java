@@ -57,7 +57,7 @@ public class FilePickerActivity extends AppCompatActivity {
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
-        setTheme(R.style.AppTheme);
+        setTheme(R.style.UnicornFilePicker_Default);
         filePickerBinding = ActivityFilePickerBinding.inflate(getLayoutInflater());
         View view = filePickerBinding.getRoot();
         setContentView(view);

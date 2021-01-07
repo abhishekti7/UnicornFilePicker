@@ -1,11 +1,26 @@
 <?xml version="1.0" encoding="utf-8"?>
 <resources>
     <!-- Base application theme. -->
-    <style name="AppTheme" parent="Theme.MaterialComponents.DayNight.NoActionBar">
+    <style name="UnicornFilePicker.Default" parent="Theme.MaterialComponents.DayNight.NoActionBar">
         <item name="colorPrimary">@color/myColorPrimary</item>
         <item name="colorPrimaryDark">@color/myColorPrimaryDark</item>
         <item name="colorAccent">@color/myColorAccent</item>
+
+        <item name="android:statusBarColor">@color/myColorAccent</item>
         <item name="android:windowBackground">@color/myColorPrimary</item>
+        <item name="android:navigationBarColor">@color/myColorPrimaryDark</item>
+
+        <!-- textColorPrimary is for toolbar title text  -->
+        <item name="android:textColorPrimary">@color/white</item>
+
+        <!-- textColorSecondary is for toolbar action icons tint-->
+        <item name="android:textColorSecondary">@color/white</item>
+
+        <item name="appBarLayoutStyle">@style/UnicornFilePicker.Default.AppBarOverlay</item>
+    </style>
+
+    <style name="UnicornFilePicker.Default.AppBarOverlay" parent="ThemeOverlay.MaterialComponents.Dark.ActionBar">
+        <item name="android:background">?colorPrimary</item>
     </style>
 
 </resources>

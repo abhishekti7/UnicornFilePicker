@@ -5,6 +5,7 @@ import androidx.appcompat.app.AppCompatActivity;
 import android.content.Intent;
 import android.os.Bundle;
 
+import zeus0789.unicorn.filepicker.UnicornFilePicker;
 import zeus0789.unicorn.filepicker.ui.FilePickerActivity;
 
 public class MainActivity extends AppCompatActivity {
@@ -14,8 +15,7 @@ public class MainActivity extends AppCompatActivity {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_main);
 
-        Intent intent = new Intent(MainActivity.this, FilePickerActivity.class);
-        startActivity(intent);
-        finish();
+        UnicornFilePicker.from(MainActivity.this)
+                .forResult(0);
     }
 }
