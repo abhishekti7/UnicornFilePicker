@@ -1,47 +1,31 @@
-#
-# Build configuration for Circle CI
-#
-# See this thread for speeding up and caching directories:
-# https://discuss.circleci.com/t/installing-android-build-tools-23-0-2/924
-#
-
-general:
-  artifacts:
-    - /home/ubuntu/UnicornFilePicker/app/build/outputs/apk/
-
-machine:
-  environment:
-    ANDROID_HOME: /usr/local/android-sdk-linux
-    ADB_INSTALL_TIMEOUT: 60
-    GRADLE_OPTS: '-Dorg.gradle.jvmargs="-Xmx3072M -XX:+HeapDumpOnOutOfMemoryError"'
-  java:
-    version: oraclejdk8
-
-dependencies:
-  pre:
-    - touch app/google-services.json
-    - echo $GOOGLE_SERVICES_JSON > app/google-services.json
-    - echo y | android update sdk --no-ui --all --filter "tools,android-30,build-tools-30.0.2,platform-tools"
-  cache_directories:
-    - /usr/local/android-sdk-linux/tools
-    - /usr/local/android-sdk-linux/build-tools/30.0.2
-
-# Comment the test stuff out (or remove it) if you don't need it.
-#test:
-#  pre:
-#    - emulator -avd circleci-android22 -no-audio -no-window:
-#        background: true
-#        parallel: true
-#    - circle-android wait-for-boot
-#    # unlock emulator
-#    - sleep 30
-#    - adb shell input keyevent 82
-#
-#  override:
-#    #    - ./gradlew clean assemble
-#    # This will run the tests:
-#    - ./gradlew assemble connectedDebugAndroidTest -PdisablePreDex --console=plain --info
-#
-#  post:
-#    - cp -r app/build/outputs $CIRCLE_ARTIFACTS
-#    - cp -r app/build/outputs/androidTest-results/connected/ $CIRCLE_TEST_REPORTS
+version: 2
+jobs:
+  build:
+    working_directory: ~/code
+    docker:
+      - image: circleci/android:api-25-alpha
+    environment:
+      JVM_OPTS: -Xmx3200m
+    steps:
+      - checkout
+      - restore_cache:
+          key: jars-{{ checksum "build.gradle" }}-{{ checksum  "app/build.gradle" }}
+      #      - run:
+      #         name: Chmod permissions #if permission for Gradlew Dependencies fail, use this.
+      #         command: sudo chmod +x ./gradlew
+      - run:
+          name: Download Dependencies
+          command: ./gradlew androidDependencies
+      - save_cache:
+          paths:
+            - ~/.gradle
+          key: jars-{{ checksum "build.gradle" }}-{{ checksum  "app/build.gradle" }}
+      - run:
+          name: Run Tests
+          command: ./gradlew lint test
+      - store_artifacts: # for display in Artifacts: https://circleci.com/docs/2.0/artifacts/ 
+          path: app/build/reports
+          destination: reports
+      - store_test_results: # for display in Test Summary: https://circleci.com/docs/2.0/collect-test-data/
+          path: app/build/test-results
+      # See https://circleci.com/docs/2.0/deployment-integrations/ for deploy examples
