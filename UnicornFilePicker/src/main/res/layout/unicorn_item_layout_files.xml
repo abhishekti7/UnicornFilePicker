@@ -1,5 +1,6 @@
 <?xml version="1.0" encoding="utf-8"?>
-<RelativeLayout xmlns:android="http://schemas.android.com/apk/res/android"
+<RelativeLayout android:id="@+id/rl_file_root"
+    xmlns:android="http://schemas.android.com/apk/res/android"
     xmlns:app="http://schemas.android.com/apk/res-auto"
     android:paddingVertical="4dp"
     android:layout_width="match_parent"
@@ -15,7 +16,7 @@
         android:layout_marginVertical="10dp"
         android:layout_centerVertical="true"
         android:layout_alignParentStart="true"
-        android:src="@drawable/ic_baseline_folder_24"/>
+        android:src="@drawable/unicorn_ic_file"/>
 
     <RelativeLayout
         android:id="@+id/rl_folder_details"
@@ -24,9 +25,10 @@
         android:layout_centerVertical="true"
         android:layout_marginStart="8dp"
         android:layout_toEndOf="@id/item_icon"
-        android:layout_toStartOf="@id/ic_open">
+        android:layout_marginEnd="8dp"
+        android:layout_toStartOf="@id/rg_selected">
         <TextView
-            android:id="@+id/tv_folder_name"
+            android:id="@+id/tv_file_name"
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
             android:textSize="16sp"
@@ -35,30 +37,19 @@
             android:ellipsize="end"/>
 
         <TextView
-            android:id="@+id/tv_num_files"
-            android:layout_width="wrap_content"
-            android:layout_height="wrap_content"
-            android:textColor="?attr/unicorn.file.subHeading"
-            android:textSize="12sp"
-            android:layout_below="@id/tv_folder_name"/>
-        <TextView
             android:id="@+id/tv_date"
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
             android:textColor="?attr/unicorn.file.subHeading"
             android:textSize="12sp"
-            android:layout_marginStart="8dp"
-            android:layout_below="@id/tv_folder_name"
-            android:layout_toEndOf="@id/tv_num_files"/>
+            android:layout_below="@id/tv_file_name"/>
     </RelativeLayout>
 
-    <ImageView
-        android:id="@+id/ic_open"
+    <RadioButton
+        android:id="@+id/rg_selected"
+        android:visibility="gone"
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
-        android:layout_alignParentEnd="true"
-        android:src="@drawable/ic_arrow_right"
-        app:tint="?attr/unicorn.file.arrowIconTint"
-        android:paddingVertical="16dp"
-        android:layout_centerVertical="true"/>
+        android:checked="true"
+        android:layout_alignParentEnd="true"/>
 </RelativeLayout>

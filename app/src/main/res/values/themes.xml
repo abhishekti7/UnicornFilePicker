@@ -4,13 +4,40 @@
         <!-- Primary brand color. -->
         <item name="colorPrimary">@color/purple_500</item>
         <item name="colorPrimaryVariant">@color/purple_700</item>
-        <item name="colorOnPrimary">@color/white</item>
+        <item name="colorOnPrimary">@color/unicorn_white</item>
         <!-- Secondary brand color. -->
         <item name="colorSecondary">@color/teal_200</item>
         <item name="colorSecondaryVariant">@color/teal_700</item>
-        <item name="colorOnSecondary">@color/black</item>
+        <item name="colorOnSecondary">@color/unicorn_black</item>
         <!-- Status bar color. -->
         <item name="android:statusBarColor" tools:targetApi="l">?attr/colorPrimaryVariant</item>
         <!-- Customize your theme here. -->
+    </style>
+
+
+    <style name="Theme.CustomUnicorn" parent="Theme.MaterialComponents.DayNight.NoActionBar">
+        <item name="colorPrimary">@color/unicorn_white</item>
+        <item name="colorPrimaryDark">@color/unicorn_colorPrimaryDark</item>
+        <item name="colorAccent">@color/unicorn_white</item>
+
+        <item name="android:statusBarColor">@color/purple_500</item>
+        <item name="android:windowBackground">@color/unicorn_white</item>
+        <item name="android:navigationBarColor">@color/unicorn_white</item>
+
+        <!-- textColorPrimary is for toolbar title text  -->
+        <item name="android:textColorPrimary">@color/unicorn_white</item>
+
+        <!-- textColorSecondary is for toolbar action icons tint-->
+        <item name="android:textColorSecondary">@color/unicorn_white</item>
+
+        <item name="unicorn.colorAccent">@color/purple_500</item>
+        <item name="unicorn.background">@color/unicorn_black</item>
+        <item name="unicorn.secondaryTextColor">@color/unicorn_white_70</item>
+        <item name="unicorn.primaryTextColor">@color/unicorn_white</item>
+        <item name="unicorn.file.heading">@color/unicorn_white</item>
+        <item name="unicorn.file.subHeading">@color/unicorn_white_70</item>
+        <item name="unicorn.file.iconTint">@color/unicorn_white</item>
+        <item name="unicorn.file.arrowIconTint">@color/unicorn_white</item>
+        <item name="unicorn.file.selectionTint">@color/unicorn_light_black</item>
     </style>
 </resources>

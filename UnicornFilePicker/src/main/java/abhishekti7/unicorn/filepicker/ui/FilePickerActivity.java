@@ -3,11 +3,11 @@ package abhishekti7.unicorn.filepicker.ui;
 import androidx.annotation.NonNull;
 import androidx.appcompat.app.AppCompatActivity;
 import androidx.appcompat.widget.SearchView;
-import androidx.core.app.ActivityCompat;
 import androidx.core.content.ContextCompat;
 import androidx.recyclerview.widget.LinearLayoutManager;
 import androidx.recyclerview.widget.RecyclerView;
 
+import android.content.Intent;
 import android.content.pm.PackageManager;
 import android.os.Bundle;
 import android.os.Environment;
@@ -17,7 +17,6 @@ import android.view.MenuInflater;
 import android.view.MenuItem;
 import android.view.View;
 import android.view.inputmethod.EditorInfo;
-import android.widget.Toast;
 
 import java.io.File;
 import java.util.ArrayList;
@@ -30,6 +29,7 @@ import abhishekti7.unicorn.filepicker.adapters.DirectoryStackAdapter;
 import abhishekti7.unicorn.filepicker.databinding.ActivityFilePickerBinding;
 import abhishekti7.unicorn.filepicker.models.Config;
 import abhishekti7.unicorn.filepicker.models.DirectoryModel;
+import abhishekti7.unicorn.filepicker.utils.UnicornSimpleItemDecoration;
 
 /**
  * Created by Abhishek Tiwari on 06-01-2021.
@@ -40,11 +40,6 @@ public class FilePickerActivity extends AppCompatActivity {
     private static final String TAG = "FilePickerActivity";
     private ActivityFilePickerBinding filePickerBinding;
 
-    private final int REQUEST_CODE_PERMISSIONS = 101;
-    private final String[] REQUIRED_PERMISSIONS = new String[]{
-            "android.permission.WRITE_EXTERNAL_STORAGE",
-            "android.permission.READ_EXTERNAL_STORAGE",
-    };
     private File root_dir;
     private ArrayList<String> selected_files;
     private ArrayList<DirectoryModel> arr_dir_stack;
@@ -53,6 +48,10 @@ public class FilePickerActivity extends AppCompatActivity {
     private DirectoryStackAdapter stackAdapter;
     private DirectoryAdapter directoryAdapter;
 
+    private final String[] REQUIRED_PERMISSIONS = new String[]{
+            "android.permission.WRITE_EXTERNAL_STORAGE",
+            "android.permission.READ_EXTERNAL_STORAGE",
+    };
 
     private Config config;
     private ArrayList<String> filters;
@@ -61,7 +60,7 @@ public class FilePickerActivity extends AppCompatActivity {
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         config = Config.getInstance();
-        setTheme(R.style.UnicornFilePicker_Dracula);
+        setTheme(config.getThemeId());
         filePickerBinding = ActivityFilePickerBinding.inflate(getLayoutInflater());
         View view = filePickerBinding.getRoot();
         setContentView(view);
@@ -77,9 +76,9 @@ public class FilePickerActivity extends AppCompatActivity {
         getSupportActionBar().setDisplayHomeAsUpEnabled(true);
         getSupportActionBar().setDisplayShowTitleEnabled(false);
 
-        if(config.getRootDir()!=null){
+        if (config.getRootDir() != null) {
             root_dir = new File(config.getRootDir());
-        }else{
+        } else {
             root_dir = Environment.getExternalStorageDirectory();
         }
         selected_files = new ArrayList<>();
@@ -98,8 +97,17 @@ public class FilePickerActivity extends AppCompatActivity {
                     root_dir.listFiles() == null ? 0 : root_dir.listFiles().length
             ));
         } else {
-            ActivityCompat.requestPermissions(FilePickerActivity.this, REQUIRED_PERMISSIONS, REQUEST_CODE_PERMISSIONS);
+            Log.e(TAG, "Storage permissions not granted. You have to implement it before starting the file picker");
+            finish();
         }
+
+        filePickerBinding.fabSelect.setOnClickListener((v)->{
+            Intent intent = new Intent();
+            intent.putStringArrayListExtra("filePaths", selected_files);
+            setResult(config.getReqCode(), intent);
+            setResult(RESULT_OK, intent);
+            finish();
+        });
 
     }
 
@@ -114,11 +122,23 @@ public class FilePickerActivity extends AppCompatActivity {
 
             @Override
             public void onFileSelected(DirectoryModel fileModel) {
-
+                if(config.isSelectMultiple()){
+                    if(selected_files.contains(fileModel.getPath())){
+                        selected_files.remove(fileModel.getPath());
+                    }else{
+                        selected_files.add(fileModel.getPath());
+                    }
+                }else{
+                    selected_files.clear();
+                    selected_files.add(fileModel.getPath());
+                }
             }
         });
         filePickerBinding.rvFiles.setAdapter(directoryAdapter);
         directoryAdapter.notifyDataSetChanged();
+        if(config.addItemDivider()){
+            filePickerBinding.rvFiles.addItemDecoration(new UnicornSimpleItemDecoration(FilePickerActivity.this));
+        }
     }
 
     private void setUpDirectoryStackView() {
@@ -137,12 +157,12 @@ public class FilePickerActivity extends AppCompatActivity {
 
     private void fetchDirectory(DirectoryModel model) {
         filePickerBinding.rlProgress.setVisibility(View.VISIBLE);
-
+        selected_files.clear();
 
         arr_files.clear();
         File dir = new File(model.getPath());
         File[] files_list = dir.listFiles();
-        if(files_list!=null){
+        if (files_list != null) {
             for (File file : files_list) {
                 DirectoryModel directoryModel = new DirectoryModel();
                 directoryModel.setDirectory(file.isDirectory());
@@ -152,21 +172,26 @@ public class FilePickerActivity extends AppCompatActivity {
 
                 if (config.showHidden() || (!config.showHidden() && !file.isHidden())) {
                     if (file.isDirectory()) {
-                        directoryModel.setNum_files(file.listFiles().length);
+                        if (file.listFiles() != null)
+                            directoryModel.setNum_files(file.listFiles().length);
                         arr_files.add(directoryModel);
                     } else {
-
-                        try {
-                            // Extract the file extension
-                            String fileName = file.getName();
-                            String extension = fileName.substring(fileName.lastIndexOf("."));
-                            for (String filter : filters) {
-                                if (extension.toLowerCase().contains(filter)) {
-                                    arr_files.add(directoryModel);
+                        // Filter out files if filters specified
+                        if(filters!=null){
+                            try {
+                                // Extract the file extension
+                                String fileName = file.getName();
+                                String extension = fileName.substring(fileName.lastIndexOf("."));
+                                for (String filter : filters) {
+                                    if (extension.toLowerCase().contains(filter)) {
+                                        arr_files.add(directoryModel);
+                                    }
                                 }
+                            } catch (Exception e) {
+//                                Log.e(TAG, "Encountered a file without an extension: ", e);
                             }
-                        } catch (Exception e) {
-                            Log.e(TAG, "Encountered a file without an extension: ", e);
+                        }else{
+                            arr_files.add(directoryModel);
                         }
                     }
                 }
@@ -178,9 +203,9 @@ public class FilePickerActivity extends AppCompatActivity {
             filePickerBinding.rvDirPath.scrollToPosition(arr_dir_stack.size() - 1);
             filePickerBinding.toolbar.setTitle(model.getName());
         }
-        if(arr_files.size()==0){
+        if (arr_files.size() == 0) {
             filePickerBinding.rlNoFiles.setVisibility(View.VISIBLE);
-        }else{
+        } else {
             filePickerBinding.rlNoFiles.setVisibility(View.GONE);
         }
         filePickerBinding.rlProgress.setVisibility(View.GONE);
@@ -207,7 +232,7 @@ public class FilePickerActivity extends AppCompatActivity {
     @Override
     public boolean onCreateOptionsMenu(Menu menu) {
         MenuInflater menuInflater = getMenuInflater();
-        menuInflater.inflate(R.menu.menu_file_picker, menu);
+        menuInflater.inflate(R.menu.unicorn_menu_file_picker, menu);
 
         MenuItem item_search = menu.findItem(R.id.action_search);
 
@@ -222,7 +247,7 @@ public class FilePickerActivity extends AppCompatActivity {
 
             @Override
             public boolean onQueryTextChange(String newText) {
-                //TODO: send query to adapter
+                directoryAdapter.getFilter().filter(newText);
                 return false;
             }
         });
@@ -239,35 +264,16 @@ public class FilePickerActivity extends AppCompatActivity {
     }
 
     @Override
-    public void onRequestPermissionsResult(int requestCode, @NonNull String[] permissions, @NonNull int[] grantResults) {
-        if (requestCode == REQUEST_CODE_PERMISSIONS) {
-            if (allPermissionsGranted()) {
-                fetchDirectory(new DirectoryModel(
-                        true,
-                        root_dir.getAbsolutePath(),
-                        "Phone Storage",
-                        root_dir.lastModified(),
-                        root_dir.listFiles() == null ? 0 : root_dir.listFiles().length
-                ));
-            } else {
-                Toast.makeText(FilePickerActivity.this, "Permissions not granted by the user.", Toast.LENGTH_SHORT).show();
-            }
-        }
-    }
-
-    @Override
     public void onBackPressed() {
         if (arr_dir_stack.size() > 1) {
             arr_dir_stack.remove(arr_dir_stack.size() - 1);
             DirectoryModel model = arr_dir_stack.remove(arr_dir_stack.size() - 1);
             fetchDirectory(model);
         } else {
+            Intent intent = new Intent();
+            setResult(config.getReqCode(), intent);
+            setResult(RESULT_CANCELED, intent);
             finish();
-//            Intent intent = new Intent();
-//            setResult(Constants.REQ_PICK_FILE, intent);
-//            setResult(RESULT_CANCELED, intent);
-//            finish();
-//            this.overridePendingTransition(R.anim.no_anim, R.anim.anim_bottom_down);
         }
     }
 

@@ -1,11 +1,14 @@
 package abhishekti7.unicorn.filepicker.adapters;
 
 import android.content.Context;
+import android.content.res.Resources;
+import android.util.TypedValue;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
 import android.widget.TextView;
 
+import androidx.annotation.ColorInt;
 import androidx.annotation.NonNull;
 import androidx.recyclerview.widget.RecyclerView;
 
@@ -23,6 +26,13 @@ public class DirectoryStackAdapter extends RecyclerView.Adapter<DirectoryStackAd
     private Context context;
     private ArrayList<DirectoryModel> directoryList;
     private onDirectoryStackListener onDirectoryStackListener;
+    private TypedValue typedValue;
+
+    @ColorInt
+    private int textColor;
+    @ColorInt
+    private int selectedTextColor;
+
 
     public interface onDirectoryStackListener{
         void onDirClicked(DirectoryModel model);
@@ -32,12 +42,19 @@ public class DirectoryStackAdapter extends RecyclerView.Adapter<DirectoryStackAd
         this.context = context;
         this.directoryList = directoryList;
         this.onDirectoryStackListener = listener;
+
+        this.typedValue = new TypedValue();
+        Resources.Theme theme = context.getTheme();
+        theme.resolveAttribute(R.attr.unicorn_primaryTextColor, typedValue, true);
+        this.textColor = typedValue.data;
+        theme.resolveAttribute(R.attr.unicorn_colorAccent, typedValue, true);
+        this.selectedTextColor = typedValue.data;
     }
 
     @NonNull
     @Override
     public ViewHolder onCreateViewHolder(@NonNull ViewGroup parent, int viewType) {
-        View view = LayoutInflater.from(context).inflate(R.layout.item_layout_directory_stack, parent, false);
+        View view = LayoutInflater.from(context).inflate(R.layout.unicorn_item_layout_directory_stack, parent, false);
         return new ViewHolder(view);
     }
 
@@ -46,9 +63,9 @@ public class DirectoryStackAdapter extends RecyclerView.Adapter<DirectoryStackAd
         holder.tv_dir_name.setText(directoryList.get(position).getName());
 
         if(position == getItemCount()-1){
-            holder.tv_dir_name.setTextColor(context.getResources().getColor(R.color.myColorAccent));
+            holder.tv_dir_name.setTextColor(this.selectedTextColor);
         }else{
-            holder.tv_dir_name.setTextColor(context.getResources().getColor(R.color.white));
+            holder.tv_dir_name.setTextColor(this.textColor);
         }
 
         holder.itemView.setOnClickListener((v)->{

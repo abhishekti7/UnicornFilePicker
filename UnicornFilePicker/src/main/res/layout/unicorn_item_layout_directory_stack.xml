@@ -9,15 +9,15 @@
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
         android:textSize="12sp"
-        android:textColor="@color/white"
+        android:textColor="?attr/unicorn.primaryTextColor"
         android:layout_centerVertical="true"
         android:paddingVertical="2dp"/>
     <ImageView
         android:id="@+id/ic_arrow"
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
-        android:src="@drawable/ic_baseline_arrow_right_24"
-        app:tint="@color/myColorAccent"
+        android:src="@drawable/unicorn_ic_arrow_solid_right"
+        app:tint="?attr/unicorn.colorAccent"
         android:layout_toEndOf="@id/tv_dir_name"
         android:layout_centerVertical="true"/>
 </RelativeLayout>

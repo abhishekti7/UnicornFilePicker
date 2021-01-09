@@ -2,51 +2,55 @@
 <resources>
     <!-- Base application theme. -->
     <style name="UnicornFilePicker.Default" parent="Theme.MaterialComponents.DayNight.NoActionBar">
-        <item name="colorPrimary">@color/myColorPrimary</item>
-        <item name="colorPrimaryDark">@color/myColorPrimaryDark</item>
-        <item name="colorAccent">@color/myColorAccent</item>
+        <item name="colorPrimary">@color/unicorn_colorPrimary</item>
+        <item name="colorPrimaryDark">@color/unicorn_colorPrimaryDark</item>
+        <item name="colorAccent">@color/unicorn_colorAccent</item>
 
-        <item name="android:statusBarColor">@color/myColorAccent</item>
-        <item name="android:windowBackground">@color/myColorPrimary</item>
-        <item name="android:navigationBarColor">@color/myColorPrimaryDark</item>
+        <item name="android:statusBarColor">@color/unicorn_colorAccent</item>
+        <item name="android:windowBackground">@color/unicorn_colorPrimary</item>
+        <item name="android:navigationBarColor">@color/unicorn_colorPrimaryDark</item>
 
         <!-- textColorPrimary is for toolbar title text  -->
-        <item name="android:textColorPrimary">@color/white</item>
+        <item name="android:textColorPrimary">@color/unicorn_black</item>
 
         <!-- textColorSecondary is for toolbar action icons tint-->
-        <item name="android:textColorSecondary">@color/white</item>
+        <item name="android:textColorSecondary">@color/unicorn_black</item>
 
-        <item name="unicorn.background">@color/white</item>
-        <item name="unicorn.secondaryTextColor">@color/black_70</item>
-        <item name="unicorn.primaryTextColor">@color/black</item>
-        <item name="unicorn.file.heading">@color/black</item>
-        <item name="unicorn.file.subHeading">@color/black_70</item>
-        <item name="unicorn.file.iconTint">@color/black</item>
-        <item name="unicorn.file.arrowIconTint">@color/black</item>
+        <item name="unicorn.colorAccent">@color/unicorn_colorAccent</item>
+        <item name="unicorn.background">@color/unicorn_white</item>
+        <item name="unicorn.secondaryTextColor">@color/unicorn_black_70</item>
+        <item name="unicorn.primaryTextColor">@color/unicorn_black</item>
+        <item name="unicorn.file.heading">@color/unicorn_black</item>
+        <item name="unicorn.file.subHeading">@color/unicorn_black_70</item>
+        <item name="unicorn.file.iconTint">@color/unicorn_black</item>
+        <item name="unicorn.file.arrowIconTint">@color/unicorn_white</item>
+        <item name="unicorn.file.selectionTint">@color/unicorn_grey</item>
     </style>
 
     <style name="UnicornFilePicker.Dracula" parent="Theme.MaterialComponents.DayNight.NoActionBar">
-        <item name="colorPrimary">@color/white</item>
-        <item name="colorPrimaryDark">@color/myColorPrimaryDark</item>
-        <item name="colorAccent">@color/white</item>
+        <item name="colorPrimary">@color/unicorn_white</item>
+        <item name="colorPrimaryDark">@color/unicorn_colorPrimaryDark</item>
+        <item name="colorAccent">@color/unicorn_white</item>
 
-        <item name="android:statusBarColor">@color/myColorAccent</item>
-        <item name="android:windowBackground">@color/white</item>
-        <item name="android:navigationBarColor">@color/white</item>
+        <item name="android:statusBarColor">@color/unicorn_colorAccent</item>
+        <item name="android:windowBackground">@color/unicorn_white</item>
+        <item name="android:navigationBarColor">@color/unicorn_white</item>
 
         <!-- textColorPrimary is for toolbar title text  -->
-        <item name="android:textColorPrimary">@color/white</item>
+        <item name="android:textColorPrimary">@color/unicorn_white</item>
 
         <!-- textColorSecondary is for toolbar action icons tint-->
-        <item name="android:textColorSecondary">@color/white</item>
+        <item name="android:textColorSecondary">@color/unicorn_white</item>
 
-        <item name="unicorn.background">@color/black</item>
-        <item name="unicorn.secondaryTextColor">@color/white_70</item>
-        <item name="unicorn.primaryTextColor">@color/white</item>
-        <item name="unicorn.file.heading">@color/white</item>
-        <item name="unicorn.file.subHeading">@color/white_70</item>
-        <item name="unicorn.file.iconTint">@color/white</item>
-        <item name="unicorn.file.arrowIconTint">@color/white</item>
+        <item name="unicorn.colorAccent">@color/unicorn_colorAccent</item>
+        <item name="unicorn.background">@color/unicorn_black</item>
+        <item name="unicorn.secondaryTextColor">@color/unicorn_white_70</item>
+        <item name="unicorn.primaryTextColor">@color/unicorn_white</item>
+        <item name="unicorn.file.heading">@color/unicorn_white</item>
+        <item name="unicorn.file.subHeading">@color/unicorn_white_70</item>
+        <item name="unicorn.file.iconTint">@color/unicorn_white</item>
+        <item name="unicorn.file.arrowIconTint">@color/unicorn_white</item>
+        <item name="unicorn.file.selectionTint">@color/unicorn_light_black</item>
     </style>
 
 

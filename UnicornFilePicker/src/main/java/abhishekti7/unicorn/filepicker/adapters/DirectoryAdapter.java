@@ -1,7 +1,8 @@
 package abhishekti7.unicorn.filepicker.adapters;
 
 import android.content.Context;
-import android.content.res.ColorStateList;
+import android.content.res.Resources;
+import android.util.TypedValue;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
@@ -12,11 +13,11 @@ import android.widget.RadioButton;
 import android.widget.RelativeLayout;
 import android.widget.TextView;
 
+import androidx.annotation.ColorInt;
 import androidx.annotation.NonNull;
 import androidx.recyclerview.widget.RecyclerView;
 
 import java.util.ArrayList;
-import java.util.List;
 
 import abhishekti7.unicorn.filepicker.R;
 import abhishekti7.unicorn.filepicker.models.Config;
@@ -33,8 +34,15 @@ public class DirectoryAdapter extends RecyclerView.Adapter<DirectoryAdapter.View
     private ArrayList<DirectoryModel> filesList;
     private ArrayList<DirectoryModel> filesListFiltered;
     private onFilesClickListener onFilesClickListener;
-    private List<Integer> selected;
+    private ArrayList<String> selected;
     private Config config;
+    private TypedValue typedValue;
+
+    @ColorInt
+    private int selectionTint;
+    @ColorInt
+    private int backgroundTint;
+
 
     @Override
     public Filter getFilter() {
@@ -70,7 +78,6 @@ public class DirectoryAdapter extends RecyclerView.Adapter<DirectoryAdapter.View
 
     public interface onFilesClickListener {
         void onClicked(DirectoryModel model);
-
         void onFileSelected(DirectoryModel fileModel);
     }
 
@@ -81,6 +88,14 @@ public class DirectoryAdapter extends RecyclerView.Adapter<DirectoryAdapter.View
         this.onFilesClickListener = onFilesClickListener;
         this.selected = new ArrayList<>();
         this.config = Config.getInstance();
+
+        // set color values from theme
+        this.typedValue = new TypedValue();
+        Resources.Theme theme = context.getTheme();
+        theme.resolveAttribute(R.attr.unicorn_file_selectionTint, typedValue, true);
+        this.selectionTint = typedValue.data;
+        theme.resolveAttribute(R.attr.unicorn_background, typedValue, true);
+        this.backgroundTint = typedValue.data;
     }
 
     @NonNull
@@ -88,9 +103,9 @@ public class DirectoryAdapter extends RecyclerView.Adapter<DirectoryAdapter.View
     public ViewHolder onCreateViewHolder(@NonNull ViewGroup parent, int viewType) {
         View view;
         if (viewType == 1) {
-            view = LayoutInflater.from(context).inflate(R.layout.item_layout_directory, parent, false);
+            view = LayoutInflater.from(context).inflate(R.layout.unicorn_item_layout_directory, parent, false);
         } else {
-            view = LayoutInflater.from(context).inflate(R.layout.item_layout_files, parent, false);
+            view = LayoutInflater.from(context).inflate(R.layout.unicorn_item_layout_files, parent, false);
         }
         return new ViewHolder(view);
     }
@@ -105,14 +120,12 @@ public class DirectoryAdapter extends RecyclerView.Adapter<DirectoryAdapter.View
         }
 
         if (!filesListFiltered.get(position).isDirectory()) {
-            String fileName = filesListFiltered.get(position).getName();
-            String extension = fileName.substring(fileName.lastIndexOf("."));
-            changeFileIcon(holder, extension);
-            if (selected.contains(position)) {
-                holder.rl_file_root.setBackgroundColor(context.getResources().getColor(R.color.white));
+            changeFileIcon(holder, filesListFiltered.get(position).getName());
+            if (selected.contains(String.valueOf(position))) {
+                holder.rl_file_root.setBackgroundColor(this.selectionTint);
                 holder.rg_selected.setVisibility(View.VISIBLE);
             } else {
-                holder.rl_file_root.setBackgroundColor(context.getResources().getColor(R.color.myColorPrimary));
+                holder.rl_file_root.setBackgroundColor(this.backgroundTint);
                 holder.rg_selected.setVisibility(View.GONE);
             }
         }
@@ -123,51 +136,51 @@ public class DirectoryAdapter extends RecyclerView.Adapter<DirectoryAdapter.View
                 onFilesClickListener.onClicked(filesListFiltered.get(position));
             } else {
                 if (config.isSelectMultiple()) {
-                    if (selected.contains(position)) {
-                        selected.remove((Integer) position);
-                        notifyItemChanged(position);
+                    if (selected.contains(String.valueOf(position))) {
+                        selected.remove(String.valueOf(position));
                         holder.rg_selected.setVisibility(View.GONE);
-                        holder.rl_file_root.setBackgroundColor(context.getResources().getColor(R.color.myColorPrimary));
+                        holder.rl_file_root.setBackgroundColor(this.backgroundTint);
                     } else {
-                        selected.add(position);
+                        selected.add(String.valueOf(position));
                         holder.rg_selected.setVisibility(View.VISIBLE);
-                        holder.rl_file_root.setBackgroundColor(context.getResources().getColor(R.color.white_70));
-                        notifyItemChanged(position);
+                        holder.rl_file_root.setBackgroundColor(this.selectionTint);
                     }
                 } else {
                     /* if selection is empty, add the current item */
                     if (selected.size()==0) {
-                        selected.add(0, position);
-                        notifyItemChanged(position);
+                        selected.add(0, String.valueOf(position));
                     }
                     /* if item already selected then remove it */
-                    else if (selected.get(0) == position) {
+                    else if (selected.get(0).equals(String.valueOf(position))) {
                         selected.remove(0);
-                        notifyItemChanged(position);
                     }
                     /* if another item selected, then remove and then add current item */
                     else{
-                        int temp = selected.remove(0);
-                        selected.add(0, position);
-                        notifyItemChanged(temp);
-                        notifyItemChanged(position);
+                        selected.remove(0);
+                        selected.add(0, String.valueOf(position));
                     }
                 }
+                notifyDataSetChanged();
                 onFilesClickListener.onFileSelected(filesListFiltered.get(position));
             }
         });
     }
 
-    private void changeFileIcon(ViewHolder holder, String extension) {
-        if(extension.toLowerCase().contains("pdf")){
-            holder.item_icon.setImageResource(R.drawable.ic_pdf);
-        }else if(
-                extension.toLowerCase().contains("png") ||
-                extension.toLowerCase().contains("jpg") ||
-                extension.toLowerCase().contains("jpeg")){
-            holder.item_icon.setImageResource(R.drawable.ic_images);
-        }
-
+    private void changeFileIcon(ViewHolder holder, String fileName) {
+       try{
+           String extension = fileName.substring(fileName.lastIndexOf("."));
+           if(extension.toLowerCase().contains("pdf")){
+               holder.item_icon.setImageResource(R.drawable.unicorn_ic_pdf);
+           }else if(
+                   extension.toLowerCase().contains("png") ||
+                           extension.toLowerCase().contains("jpg") ||
+                           extension.toLowerCase().contains("jpeg")){
+               holder.item_icon.setImageResource(R.drawable.unicorn_ic_images);
+           }
+       }catch (Exception e){
+           holder.item_icon.setImageResource(R.drawable.unicorn_ic_file);
+//           e.printStackTrace();
+       }
     }
 
     /**

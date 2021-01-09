@@ -8,6 +8,7 @@ import androidx.fragment.app.Fragment;
 
 import java.lang.ref.WeakReference;
 
+import abhishekti7.unicorn.filepicker.models.Config;
 import abhishekti7.unicorn.filepicker.ui.FilePickerActivity;
 
 /**
@@ -58,6 +59,8 @@ public final class UnicornFilePicker {
      * @param requestCode Integer identity for Activity or Fragment request
      */
     public void forResult(int requestCode){
+        Config.getInstance().setReqCode(requestCode);
+
         Activity activity = getActivity();
         if(activity==null){
             return;
@@ -67,9 +70,9 @@ public final class UnicornFilePicker {
 
         Fragment fragment = getFragment();
         if(fragment==null){
-            activity.startActivity(intent);
+            activity.startActivityForResult(intent, requestCode);
         }else{
-            fragment.startActivity(intent);
+            fragment.startActivityForResult(intent, requestCode);
         }
     }
 

@@ -9,6 +9,8 @@ android {
         enabled true
     }
 
+    resourcePrefix "unicorn_"
+
     defaultConfig {
         minSdkVersion 21
         targetSdkVersion 30

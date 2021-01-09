@@ -1,13 +1,15 @@
 <?xml version="1.0" encoding="utf-8"?>
 <resources>
     
-    <color name="myColorAccent">#ffa502</color>
-    <color name="myColorPrimary">#000</color>
-    <color name="myColorPrimaryDark">#000</color>
+    <color name="unicorn_colorAccent">#ffa502</color>
+    <color name="unicorn_colorPrimary">#000</color>
+    <color name="unicorn_colorPrimaryDark">#000</color>
 
-    <color name="white">#fff</color>
-    <color name="black">#000</color>
-    <color name="black_70">#B3000000</color>
-    <color name="white_70">#B3FFFFFF</color>
+    <color name="unicorn_white">#fff</color>
+    <color name="unicorn_black">#000</color>
+    <color name="unicorn_black_70">#B3000000</color>
+    <color name="unicorn_white_70">#B3FFFFFF</color>
+    <color name="unicorn_light_black">#353535</color>
+    <color name="unicorn_grey">#E5E7E9</color>
 
 </resources>
