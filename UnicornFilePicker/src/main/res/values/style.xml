@@ -16,11 +16,38 @@
         <!-- textColorSecondary is for toolbar action icons tint-->
         <item name="android:textColorSecondary">@color/white</item>
 
-        <item name="appBarLayoutStyle">@style/UnicornFilePicker.Default.AppBarOverlay</item>
+        <item name="unicorn.background">@color/white</item>
+        <item name="unicorn.secondaryTextColor">@color/black_70</item>
+        <item name="unicorn.primaryTextColor">@color/black</item>
+        <item name="unicorn.file.heading">@color/black</item>
+        <item name="unicorn.file.subHeading">@color/black_70</item>
+        <item name="unicorn.file.iconTint">@color/black</item>
+        <item name="unicorn.file.arrowIconTint">@color/black</item>
     </style>
 
-    <style name="UnicornFilePicker.Default.AppBarOverlay" parent="ThemeOverlay.MaterialComponents.Dark.ActionBar">
-        <item name="android:background">?colorPrimary</item>
+    <style name="UnicornFilePicker.Dracula" parent="Theme.MaterialComponents.DayNight.NoActionBar">
+        <item name="colorPrimary">@color/white</item>
+        <item name="colorPrimaryDark">@color/myColorPrimaryDark</item>
+        <item name="colorAccent">@color/white</item>
+
+        <item name="android:statusBarColor">@color/myColorAccent</item>
+        <item name="android:windowBackground">@color/white</item>
+        <item name="android:navigationBarColor">@color/white</item>
+
+        <!-- textColorPrimary is for toolbar title text  -->
+        <item name="android:textColorPrimary">@color/white</item>
+
+        <!-- textColorSecondary is for toolbar action icons tint-->
+        <item name="android:textColorSecondary">@color/white</item>
+
+        <item name="unicorn.background">@color/black</item>
+        <item name="unicorn.secondaryTextColor">@color/white_70</item>
+        <item name="unicorn.primaryTextColor">@color/white</item>
+        <item name="unicorn.file.heading">@color/white</item>
+        <item name="unicorn.file.subHeading">@color/white_70</item>
+        <item name="unicorn.file.iconTint">@color/white</item>
+        <item name="unicorn.file.arrowIconTint">@color/white</item>
     </style>
+
 
 </resources>

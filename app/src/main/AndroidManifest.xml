@@ -1,6 +1,6 @@
 <?xml version="1.0" encoding="utf-8"?>
 <manifest xmlns:android="http://schemas.android.com/apk/res/android"
-    package="dev.zeus0789.filepickerexample">
+    package="dev.abhishekti7.filepickerexample">
 
     <application
         android:allowBackup="true"
@@ -10,7 +10,7 @@
         android:supportsRtl="true"
         android:requestLegacyExternalStorage="true"
         android:theme="@style/Theme.FilePickerExample">
-        <activity android:name=".MainActivity">
+        <activity android:name="dev.abhishekti7.filepickerexample.MainActivity">
             <intent-filter>
                 <action android:name="android.intent.action.MAIN" />
 

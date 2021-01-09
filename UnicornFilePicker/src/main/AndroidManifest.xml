@@ -1,12 +1,12 @@
 <?xml version="1.0" encoding="utf-8"?>
 <manifest xmlns:android="http://schemas.android.com/apk/res/android"
-    package="zeus0789.unicorn.filepicker">
+    package="abhishekti7.unicorn.filepicker">
 
     <uses-permission android:name="android.permission.WRITE_EXTERNAL_STORAGE"/>
     <uses-permission android:name="android.permission.READ_EXTERNAL_STORAGE"/>
 
     <application>
-        <activity android:name=".ui.FilePickerActivity" />
+        <activity android:name="abhishekti7.unicorn.filepicker.ui.FilePickerActivity" />
     </application>
 
 </manifest>

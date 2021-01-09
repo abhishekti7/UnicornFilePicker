@@ -1,0 +1,12 @@
+<?xml version="1.0" encoding="utf-8"?>
+<resources>
+    <attr name="unicorn.background" format="color"/>
+    <attr name="unicorn.primaryTextColor" format="color"/>
+    <attr name="unicorn.secondaryTextColor" format="color"/>
+    <attr name="unicorn.fabColor" format="color"/>
+    <attr name="unicorn.iconTintColor" format="color"/>
+    <attr name="unicorn.file.heading" format="color"/>
+    <attr name="unicorn.file.subHeading" format="color"/>
+    <attr name="unicorn.file.iconTint" format="color"/>
+    <attr name="unicorn.file.arrowIconTint" format="color"/>
+</resources>

@@ -11,7 +11,7 @@ android {
     }
 
     defaultConfig {
-        applicationId "dev.zeus0789.filepickerexample"
+        applicationId "dev.abhishekti7.filepickerexample"
         minSdkVersion 21
         targetSdkVersion 30
         versionCode 1
