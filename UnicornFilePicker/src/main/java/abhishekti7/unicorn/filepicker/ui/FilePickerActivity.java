@@ -26,7 +26,7 @@ import java.util.Comparator;
 import abhishekti7.unicorn.filepicker.R;
 import abhishekti7.unicorn.filepicker.adapters.DirectoryAdapter;
 import abhishekti7.unicorn.filepicker.adapters.DirectoryStackAdapter;
-import abhishekti7.unicorn.filepicker.databinding.ActivityFilePickerBinding;
+import abhishekti7.unicorn.filepicker.databinding.UnicornActivityFilePickerBinding;
 import abhishekti7.unicorn.filepicker.models.Config;
 import abhishekti7.unicorn.filepicker.models.DirectoryModel;
 import abhishekti7.unicorn.filepicker.utils.UnicornSimpleItemDecoration;
@@ -38,7 +38,7 @@ import abhishekti7.unicorn.filepicker.utils.UnicornSimpleItemDecoration;
 public class FilePickerActivity extends AppCompatActivity {
 
     private static final String TAG = "FilePickerActivity";
-    private ActivityFilePickerBinding filePickerBinding;
+    private UnicornActivityFilePickerBinding filePickerBinding;
 
     private File root_dir;
     private ArrayList<String> selected_files;
@@ -61,7 +61,7 @@ public class FilePickerActivity extends AppCompatActivity {
         super.onCreate(savedInstanceState);
         config = Config.getInstance();
         setTheme(config.getThemeId());
-        filePickerBinding = ActivityFilePickerBinding.inflate(getLayoutInflater());
+        filePickerBinding = UnicornActivityFilePickerBinding.inflate(getLayoutInflater());
         View view = filePickerBinding.getRoot();
         setContentView(view);
 
