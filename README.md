@@ -2,7 +2,7 @@
 
 # Unicorn File Picker
 
-[![CircleCI](https://circleci.com/gh/abhishekti7/UnicornFilePicker.svg?style=svg)](https://circleci.com/gh/abhishekti7/UnicornFilePicker/tree/master) 
+[![CircleCI](https://circleci.com/gh/abhishekti7/UnicornFilePicker.svg?style=svg)](https://circleci.com/gh/abhishekti7/UnicornFilePicker/tree/master)  [ ![Download](https://img.shields.io/jitpack/v/github/abhishekti7/UnicornFilePicker) ] 
 
 Unicorn File Picker is a library designed to package a powerful file selector for android. You can:
  - Start the file picker activity from any activity or fragment
@@ -27,7 +27,7 @@ repositories {
 }
 
 dependencies {
-    implementation 'com.zhihu.android:matisse:$latest_version'
+    implementation 'com.github.abhishekti7:UnicornFilePicker:$latest_version'
 }
 ```
 
@@ -88,4 +88,4 @@ protected void onActivityResult(int requestCode, int resultCode, Intent data) {
 ```
 
 ## Contributing
-[UnicornFilePicker is an Open Source Project](https://github.com/zhihu/Matisse/blob/master/CONTRIBUTING.md)
+[UnicornFilePicker is an Open Source Project](https://github.com/abhishekti7/UnicornFilePicker/blob/master/CONTRIBUTING.md)
