@@ -90,7 +90,6 @@
         android:layout_gravity="bottom|end"
         android:layout_margin="16dp"
         app:borderWidth="0dp"
-        android:backgroundTint="@color/unicorn_colorAccent"
         app:maxImageSize="32dp"
         android:src="@drawable/unicorn_ic_done"/>
 

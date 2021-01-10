@@ -9,9 +9,12 @@ import androidx.recyclerview.widget.RecyclerView;
 
 import android.content.Intent;
 import android.content.pm.PackageManager;
+import android.content.res.ColorStateList;
+import android.content.res.Resources;
 import android.os.Bundle;
 import android.os.Environment;
 import android.util.Log;
+import android.util.TypedValue;
 import android.view.Menu;
 import android.view.MenuInflater;
 import android.view.MenuItem;
@@ -55,6 +58,7 @@ public class FilePickerActivity extends AppCompatActivity {
 
     private Config config;
     private ArrayList<String> filters;
+
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -103,11 +107,24 @@ public class FilePickerActivity extends AppCompatActivity {
 
         filePickerBinding.fabSelect.setOnClickListener((v)->{
             Intent intent = new Intent();
+            if(config.showOnlyDirectory()){
+                selected_files.clear();
+                selected_files.add(arr_dir_stack.get(arr_dir_stack.size()-1).getPath());
+            }
             intent.putStringArrayListExtra("filePaths", selected_files);
             setResult(config.getReqCode(), intent);
             setResult(RESULT_OK, intent);
             finish();
         });
+
+        TypedValue typedValue = new TypedValue();
+        Resources.Theme theme = getTheme();
+        theme.resolveAttribute(R.attr.unicorn_fabColor, typedValue, true);
+        if(typedValue.data!=0){
+            filePickerBinding.fabSelect.setBackgroundTintList(ColorStateList.valueOf(typedValue.data));
+        }else{
+            filePickerBinding.fabSelect.setBackgroundTintList(ColorStateList.valueOf(getResources().getColor(R.color.unicorn_colorAccent)));
+        }
 
     }
 
@@ -155,6 +172,9 @@ public class FilePickerActivity extends AppCompatActivity {
         stackAdapter.notifyDataSetChanged();
     }
 
+    /**
+     * Fetches list of files in a folder and filters files if filter present
+     */
     private void fetchDirectory(DirectoryModel model) {
         filePickerBinding.rlProgress.setVisibility(View.VISIBLE);
         selected_files.clear();
@@ -176,22 +196,24 @@ public class FilePickerActivity extends AppCompatActivity {
                             directoryModel.setNum_files(file.listFiles().length);
                         arr_files.add(directoryModel);
                     } else {
-                        // Filter out files if filters specified
-                        if(filters!=null){
-                            try {
-                                // Extract the file extension
-                                String fileName = file.getName();
-                                String extension = fileName.substring(fileName.lastIndexOf("."));
-                                for (String filter : filters) {
-                                    if (extension.toLowerCase().contains(filter)) {
-                                        arr_files.add(directoryModel);
+                        if(!config.showOnlyDirectory()){
+                            // Filter out files if filters specified
+                            if(filters!=null){
+                                try {
+                                    // Extract the file extension
+                                    String fileName = file.getName();
+                                    String extension = fileName.substring(fileName.lastIndexOf("."));
+                                    for (String filter : filters) {
+                                        if (extension.toLowerCase().contains(filter)) {
+                                            arr_files.add(directoryModel);
+                                        }
                                     }
-                                }
-                            } catch (Exception e) {
+                                } catch (Exception e) {
 //                                Log.e(TAG, "Encountered a file without an extension: ", e);
+                                }
+                            }else{
+                                arr_files.add(directoryModel);
                             }
-                        }else{
-                            arr_files.add(directoryModel);
                         }
                     }
                 }
@@ -213,6 +235,7 @@ public class FilePickerActivity extends AppCompatActivity {
         directoryAdapter.notifyDataSetChanged();
     }
 
+    // Custom Comparator to sort the list of files in lexicographical order
     public static class CustomFileComparator implements Comparator<DirectoryModel> {
         @Override
         public int compare(DirectoryModel o1, DirectoryModel o2) {
@@ -254,6 +277,9 @@ public class FilePickerActivity extends AppCompatActivity {
         return true;
     }
 
+    /**
+     * This method checks whether STORAGE permissions are granted or not
+     */
     private boolean allPermissionsGranted() {
         for (String permission : REQUIRED_PERMISSIONS) {
             if (ContextCompat.checkSelfPermission(FilePickerActivity.this, permission) != PackageManager.PERMISSION_GRANTED) {
@@ -266,10 +292,12 @@ public class FilePickerActivity extends AppCompatActivity {
     @Override
     public void onBackPressed() {
         if (arr_dir_stack.size() > 1) {
+            // pop off top value and display
             arr_dir_stack.remove(arr_dir_stack.size() - 1);
             DirectoryModel model = arr_dir_stack.remove(arr_dir_stack.size() - 1);
             fetchDirectory(model);
         } else {
+            // Nothing left in stack so exit
             Intent intent = new Intent();
             setResult(config.getReqCode(), intent);
             setResult(RESULT_CANCELED, intent);

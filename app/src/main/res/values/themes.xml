@@ -39,5 +39,6 @@
         <item name="unicorn.file.iconTint">@color/unicorn_white</item>
         <item name="unicorn.file.arrowIconTint">@color/unicorn_white</item>
         <item name="unicorn.file.selectionTint">@color/unicorn_light_black</item>
+        <item name="unicorn.fabColor">@color/purple_500</item>
     </style>
 </resources>

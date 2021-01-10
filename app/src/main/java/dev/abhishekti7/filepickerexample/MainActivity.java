@@ -48,6 +48,7 @@ public class MainActivity extends AppCompatActivity {
             UnicornFilePicker.from(MainActivity.this)
                     .addConfigBuilder()
                     .selectMultipleFiles(true)
+                    .showOnlyDirectory(true)
                     .setRootDirectory(Environment.getExternalStorageDirectory().getAbsolutePath())
                     .showHiddenFiles(false)
                     .setFilters(new String[]{"pdf", "png", "jpg", "jpeg"})

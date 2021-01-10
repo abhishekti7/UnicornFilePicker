@@ -17,6 +17,7 @@
         <item name="android:textColorSecondary">@color/unicorn_black</item>
 
         <item name="unicorn.colorAccent">@color/unicorn_colorAccent</item>
+        <item name="unicorn.fabColor">@color/unicorn_colorAccent</item>
         <item name="unicorn.background">@color/unicorn_white</item>
         <item name="unicorn.secondaryTextColor">@color/unicorn_black_70</item>
         <item name="unicorn.primaryTextColor">@color/unicorn_black</item>
@@ -43,6 +44,7 @@
         <item name="android:textColorSecondary">@color/unicorn_white</item>
 
         <item name="unicorn.colorAccent">@color/unicorn_colorAccent</item>
+        <item name="unicorn.fabColor">@color/unicorn_colorAccent</item>
         <item name="unicorn.background">@color/unicorn_black</item>
         <item name="unicorn.secondaryTextColor">@color/unicorn_white_70</item>
         <item name="unicorn.primaryTextColor">@color/unicorn_white</item>

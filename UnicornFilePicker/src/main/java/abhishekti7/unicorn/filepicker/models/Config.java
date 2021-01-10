@@ -18,6 +18,7 @@ public final class Config {
     private ArrayList<String> extensionFilters;
     private int reqCode;
     private boolean addItemDivider;
+    private boolean showOnlyDirectory;
 
     @StyleRes
     private int themeId;
@@ -56,6 +57,14 @@ public final class Config {
 
     public void setExtensionFilters(ArrayList<String> extensionFilters) {
         this.extensionFilters = extensionFilters;
+    }
+
+    public boolean showOnlyDirectory() {
+        return showOnlyDirectory;
+    }
+
+    public void setShowOnlyDirectory(boolean showOnlyDirectory) {
+        this.showOnlyDirectory = showOnlyDirectory;
     }
 
     public boolean addItemDivider() {

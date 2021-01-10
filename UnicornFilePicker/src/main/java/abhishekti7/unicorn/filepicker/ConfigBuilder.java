@@ -18,12 +18,13 @@ import abhishekti7.unicorn.filepicker.ui.FilePickerActivity;
  */
 public final class ConfigBuilder {
     private String rootDir;
-    private boolean showHidden;
-    private boolean selectMultiple;
-    private boolean addDivider;
+    private boolean showHidden = false;
+    private boolean selectMultiple = false;
+    private boolean addDivider = false;
+    private boolean showOnlyDir = false;
 
     @StyleRes
-    private int themeId;
+    private int themeId = R.style.UnicornFilePicker_Default;
 
     private final UnicornFilePicker unicornFilePicker;
     private ArrayList<String> extensionFilters;
@@ -64,6 +65,11 @@ public final class ConfigBuilder {
         return this;
     }
 
+    public ConfigBuilder showOnlyDirectory(boolean value){
+        this.showOnlyDir = value;
+        return this;
+    }
+
     public UnicornFilePicker build(){
         config.setRootDir(this.rootDir);
         config.setSelectMultiple(this.selectMultiple);
@@ -71,6 +77,7 @@ public final class ConfigBuilder {
         config.setExtensionFilters(this.extensionFilters);
         config.setAddItemDivider(this.addDivider);
         config.setThemeId(this.themeId);
+        config.setShowOnlyDirectory(this.showOnlyDir);
         return unicornFilePicker;
     }
 
