@@ -87,6 +87,32 @@ protected void onActivityResult(int requestCode, int resultCode, Intent data) {
 }
 ```
 
+---
+
+## **PLEASE NOTE:**
+### API >= 21 && API <=28
+The file picker works great on legacy android versions and there's is no need for any additional configuration.
+
+### API 29
+You need to add the following line to your manifest file if you want to use this picker on android 10 for atleast a few months.
+```
+    android:requestLegacyExternalStorage="true"
+```
+
+This line indicates to the operating system that we want to opt out of the new Scoped Storage system.
+
+### API > 29 (WIP)
+Unfortunately this library has no stable support for file access on Android 11+. 
+Behaviour noticed on Android 11 -> While the file picker works, the only files that are displayed are the media files which include images, videos, audio, etc. 
+This is because of the introduction of the Google's infamous new storage model called Scoped Storage which aims to improve file security. You can read all about this here: [Scoped Storage](https://developer.android.com/about/versions/11/privacy/storage)
+
+This feature is currently a work-in-progress along with many other awesome things on the roadmap. 
+If you feel you can add value to this feature then please see the section on Contributing.
+
+---
+
+
+
 ## Contributing
 [UnicornFilePicker is an Open Source Project](https://github.com/abhishekti7/UnicornFilePicker/blob/master/CONTRIBUTING.md)
 
