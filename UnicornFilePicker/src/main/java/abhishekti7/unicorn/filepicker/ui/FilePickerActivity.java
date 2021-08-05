@@ -20,18 +20,23 @@ import android.view.MenuInflater;
 import android.view.MenuItem;
 import android.view.View;
 import android.view.inputmethod.EditorInfo;
+import android.widget.AdapterView;
 
 import java.io.File;
 import java.util.ArrayList;
 import java.util.Collections;
 import java.util.Comparator;
+import java.util.List;
 
 import abhishekti7.unicorn.filepicker.R;
 import abhishekti7.unicorn.filepicker.adapters.DirectoryAdapter;
 import abhishekti7.unicorn.filepicker.adapters.DirectoryStackAdapter;
+import abhishekti7.unicorn.filepicker.adapters.StorageAdapter;
 import abhishekti7.unicorn.filepicker.databinding.UnicornActivityFilePickerBinding;
 import abhishekti7.unicorn.filepicker.models.Config;
 import abhishekti7.unicorn.filepicker.models.DirectoryModel;
+import abhishekti7.unicorn.filepicker.storage.StorageDirectoryParcelable;
+import abhishekti7.unicorn.filepicker.storage.StorageUtils;
 import abhishekti7.unicorn.filepicker.utils.UnicornSimpleItemDecoration;
 
 /**
@@ -68,8 +73,29 @@ public class FilePickerActivity extends AppCompatActivity {
         filePickerBinding = UnicornActivityFilePickerBinding.inflate(getLayoutInflater());
         View view = filePickerBinding.getRoot();
         setContentView(view);
+        setupAvailableStorage();
 
         initConfig();
+    }
+
+    private void setupAvailableStorage() {
+        List<StorageDirectoryParcelable> storageDirectoryParcelableList = StorageUtils.getStorageDirectories(this);
+        if(storageDirectoryParcelableList == null) return;
+        StorageAdapter adapter = new StorageAdapter(this, storageDirectoryParcelableList);
+        filePickerBinding.rvStoragePath.setAdapter(adapter);
+        filePickerBinding.rvStoragePath.setOnItemSelectedListener(new AdapterView.OnItemSelectedListener() {
+            @Override
+            public void onItemSelected(AdapterView<?> parent, View view, int position, long id) {
+                StorageDirectoryParcelable storage = (StorageDirectoryParcelable) parent.getAdapter().getItem(position) ;
+                config.setRootDir(storage.getPath());
+                initConfig();
+            }
+
+            @Override
+            public void onNothingSelected(AdapterView<?> parent) {
+
+            }
+        });
     }
 
     private void initConfig() {

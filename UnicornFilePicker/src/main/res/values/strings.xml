@@ -1,4 +1,7 @@
 <resources>
     <string name="unicorn_search">Search</string>
     <string name="unicorn_no_files">No files</string>
+    <string name="unicorn_root_directory">Root</string>
+    <string name="unicorn_storage_internal">Internal</string>
+    <string name="unicorn_storage_sd_card">SD Card</string>
 </resources>

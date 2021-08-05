@@ -28,14 +28,27 @@
         android:layout_marginHorizontal="8dp"
         app:layout_behavior="com.google.android.material.appbar.AppBarLayout$ScrollingViewBehavior">
 
+        <androidx.appcompat.widget.AppCompatSpinner
+            android:id="@+id/rv_storage_path"
+            android:layout_width="220dp"
+            android:layout_height="wrap_content"
+            android:paddingVertical="8dp"
+            app:layout_constraintEnd_toEndOf="parent"
+            app:layout_constraintHorizontal_bias="0.0"
+            app:popupTheme="@style/ThemeOverlay.AppCompat.DayNight"
+            app:theme="@style/Theme.AppCompat.DayNight"
+            app:layout_constraintStart_toStartOf="parent"
+            app:layout_constraintTop_toTopOf="parent" />
+
         <androidx.recyclerview.widget.RecyclerView
             android:id="@+id/rv_dir_path"
-            android:paddingVertical="8dp"
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
-            app:layout_constraintTop_toTopOf="parent"
+            android:paddingVertical="8dp"
+            android:paddingHorizontal="8dp"
+            app:layout_constraintEnd_toEndOf="parent"
             app:layout_constraintStart_toStartOf="parent"
-            app:layout_constraintEnd_toEndOf="parent"/>
+            app:layout_constraintTop_toBottomOf="@+id/rv_storage_path" />
 
         <RelativeLayout
             android:id="@+id/rl_progress"

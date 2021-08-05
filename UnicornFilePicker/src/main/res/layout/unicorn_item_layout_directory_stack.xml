@@ -8,10 +8,10 @@
         android:id="@+id/tv_dir_name"
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
-        android:textSize="12sp"
-        android:textColor="?attr/unicorn.primaryTextColor"
         android:layout_centerVertical="true"
-        android:paddingVertical="2dp"/>
+        android:paddingVertical="2dp"
+        android:textColor="?attr/unicorn.primaryTextColor"
+        android:textSize="14sp" />
     <ImageView
         android:id="@+id/ic_arrow"
         android:layout_width="wrap_content"
