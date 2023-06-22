@@ -9,14 +9,15 @@
         android:id="@+id/icon"
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
-        app:tint="?attr/unicorn.primaryTextColor"
+        app:tint="@color/unicorn_md_theme_onSurface"
         android:src="@drawable/ic_baseline_sd_storage_24"/>
     <TextView
         android:id="@+id/title"
         tools:text="Local Storage"
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
+        android:textColor="@color/unicorn_md_theme_onSurface"
         android:layout_marginStart="8dp"
-        android:textAppearance="@style/TextAppearance.MaterialComponents.Subtitle1"/>
+        android:textAppearance="@style/TextAppearance.Material3.LabelMedium"/>
 
 </androidx.appcompat.widget.LinearLayoutCompat>

@@ -1,342 +1,338 @@
-package abhishekti7.unicorn.filepicker.ui;
+package abhishekti7.unicorn.filepicker.ui
 
-import androidx.annotation.NonNull;
-import androidx.appcompat.app.AppCompatActivity;
-import androidx.appcompat.widget.SearchView;
-import androidx.core.content.ContextCompat;
-import androidx.recyclerview.widget.LinearLayoutManager;
-import androidx.recyclerview.widget.RecyclerView;
-
-import android.content.Intent;
-import android.content.pm.PackageManager;
-import android.content.res.ColorStateList;
-import android.content.res.Resources;
-import android.os.Bundle;
-import android.os.Environment;
-import android.util.Log;
-import android.util.TypedValue;
-import android.view.Menu;
-import android.view.MenuInflater;
-import android.view.MenuItem;
-import android.view.View;
-import android.view.inputmethod.EditorInfo;
-import android.widget.AdapterView;
-
-import java.io.File;
-import java.util.ArrayList;
-import java.util.Collections;
-import java.util.Comparator;
-import java.util.List;
-
-import abhishekti7.unicorn.filepicker.R;
-import abhishekti7.unicorn.filepicker.adapters.DirectoryAdapter;
-import abhishekti7.unicorn.filepicker.adapters.DirectoryStackAdapter;
-import abhishekti7.unicorn.filepicker.adapters.StorageAdapter;
-import abhishekti7.unicorn.filepicker.databinding.UnicornActivityFilePickerBinding;
-import abhishekti7.unicorn.filepicker.models.Config;
-import abhishekti7.unicorn.filepicker.models.DirectoryModel;
-import abhishekti7.unicorn.filepicker.storage.StorageDirectoryParcelable;
-import abhishekti7.unicorn.filepicker.storage.StorageUtils;
-import abhishekti7.unicorn.filepicker.utils.UnicornSimpleItemDecoration;
+import abhishekti7.unicorn.filepicker.R
+import abhishekti7.unicorn.filepicker.adapters.DirectoryAdapter
+import abhishekti7.unicorn.filepicker.adapters.DirectoryAdapter.onFilesClickListener
+import abhishekti7.unicorn.filepicker.adapters.DirectoryStackAdapter
+import abhishekti7.unicorn.filepicker.adapters.StorageAdapter
+import abhishekti7.unicorn.filepicker.databinding.UnicornActivityFilePickerBinding
+import abhishekti7.unicorn.filepicker.models.Config
+import abhishekti7.unicorn.filepicker.models.DirectoryModel
+import abhishekti7.unicorn.filepicker.storage.StorageDirectoryParcelable
+import abhishekti7.unicorn.filepicker.storage.StorageUtils.getStorageDirectories
+import abhishekti7.unicorn.filepicker.utils.UnicornSimpleItemDecoration
+import android.content.Intent
+import android.content.pm.PackageManager
+import android.content.res.ColorStateList
+import android.os.Build
+import android.os.Bundle
+import android.os.Environment
+import android.util.Log
+import android.util.TypedValue
+import android.view.Menu
+import android.view.MenuItem
+import android.view.View
+import android.view.inputmethod.EditorInfo
+import android.widget.AdapterView
+import android.widget.AdapterView.OnItemSelectedListener
+import androidx.appcompat.app.AppCompatActivity
+import androidx.appcompat.widget.SearchView
+import androidx.appcompat.widget.SearchView.SearchAutoComplete
+import androidx.core.content.ContextCompat
+import androidx.recyclerview.widget.LinearLayoutManager
+import androidx.recyclerview.widget.RecyclerView
+import java.io.File
+import java.util.Collections
+import java.util.Locale
 
 /**
  * Created by Abhishek Tiwari on 06-01-2021.
  */
-
-public class FilePickerActivity extends AppCompatActivity {
-
-    private static final String TAG = "FilePickerActivity";
-    private UnicornActivityFilePickerBinding filePickerBinding;
-
-    private File root_dir;
-    private ArrayList<String> selected_files;
-    private ArrayList<DirectoryModel> arr_dir_stack;
-    private ArrayList<DirectoryModel> arr_files;
-
-    private DirectoryStackAdapter stackAdapter;
-    private DirectoryAdapter directoryAdapter;
-
-    private final String[] REQUIRED_PERMISSIONS = new String[]{
-            "android.permission.WRITE_EXTERNAL_STORAGE",
-            "android.permission.READ_EXTERNAL_STORAGE",
-    };
-
-    private Config config;
-    private ArrayList<String> filters;
-
-
-    @Override
-    protected void onCreate(Bundle savedInstanceState) {
-        super.onCreate(savedInstanceState);
-        config = Config.getInstance();
-        setTheme(config.getThemeId());
-        filePickerBinding = UnicornActivityFilePickerBinding.inflate(getLayoutInflater());
-        View view = filePickerBinding.getRoot();
-        setContentView(view);
-        setupAvailableStorage();
-
-        initConfig();
+class FilePickerActivity : AppCompatActivity() {
+    private lateinit var filePickerBinding: UnicornActivityFilePickerBinding
+    private lateinit var root_dir: File
+    private var selected_files: ArrayList<String> =  arrayListOf()
+    private var arr_dir_stack: ArrayList<DirectoryModel> =  arrayListOf()
+    private var arr_files: ArrayList<DirectoryModel> =  arrayListOf()
+    private lateinit var stackAdapter: DirectoryStackAdapter
+    private lateinit var directoryAdapter: DirectoryAdapter
+    private val REQUIRED_PERMISSIONS = arrayOf(
+        "android.permission.WRITE_EXTERNAL_STORAGE",
+        "android.permission.READ_EXTERNAL_STORAGE"
+    )
+    private lateinit var config: Config
+    private var filters: ArrayList<String> = arrayListOf()
+    override fun onCreate(savedInstanceState: Bundle?) {
+        super.onCreate(savedInstanceState)
+        config = Config.getInstance()
+        setTheme(config.getThemeId())
+        filePickerBinding = UnicornActivityFilePickerBinding.inflate(
+            layoutInflater
+        )
+        val view: View = filePickerBinding.root
+        setContentView(view)
+        setupAvailableStorage()
+        initConfig()
     }
 
-    private void setupAvailableStorage() {
-        List<StorageDirectoryParcelable> storageDirectoryParcelableList = StorageUtils.getStorageDirectories(this);
-        if(storageDirectoryParcelableList == null) return;
-        StorageAdapter adapter = new StorageAdapter(this, storageDirectoryParcelableList);
-        filePickerBinding.rvStoragePath.setAdapter(adapter);
-        filePickerBinding.rvStoragePath.setOnItemSelectedListener(new AdapterView.OnItemSelectedListener() {
-            @Override
-            public void onItemSelected(AdapterView<?> parent, View view, int position, long id) {
-                StorageDirectoryParcelable storage = (StorageDirectoryParcelable) parent.getAdapter().getItem(position) ;
-                config.setRootDir(storage.getPath());
-                initConfig();
+    private fun setupAvailableStorage() {
+        val storageDirectoryParcelableList = getStorageDirectories(this)
+            ?: return
+        val adapter = StorageAdapter(this, storageDirectoryParcelableList)
+        filePickerBinding.rvStoragePath.adapter = adapter
+        filePickerBinding.rvStoragePath.onItemSelectedListener = object : OnItemSelectedListener {
+            override fun onItemSelected(
+                parent: AdapterView<*>,
+                view: View,
+                position: Int,
+                id: Long
+            ) {
+                val storage = parent.adapter.getItem(position) as StorageDirectoryParcelable
+                config.rootDir = storage.path
+                initConfig()
             }
 
-            @Override
-            public void onNothingSelected(AdapterView<?> parent) {
-
-            }
-        });
-    }
-
-    private void initConfig() {
-        filters = config.getExtensionFilters();
-
-
-        setSupportActionBar(filePickerBinding.toolbar);
-        getSupportActionBar().setDisplayHomeAsUpEnabled(true);
-        getSupportActionBar().setDisplayShowTitleEnabled(false);
-
-        if (config.getRootDir() != null) {
-            root_dir = new File(config.getRootDir());
-        } else {
-            root_dir = Environment.getExternalStorageDirectory();
+            override fun onNothingSelected(parent: AdapterView<*>?) {}
         }
-        selected_files = new ArrayList<>();
-        arr_dir_stack = new ArrayList<>();
-        arr_files = new ArrayList<>();
+    }
 
-        setUpDirectoryStackView();
-        setUpFilesView();
-
+    private fun initConfig() {
+        filters = config.extensionFilters
+        setSupportActionBar(filePickerBinding.toolbar)
+        supportActionBar?.setDisplayHomeAsUpEnabled(true)
+        supportActionBar?.setDisplayShowTitleEnabled(false)
+        root_dir = if (config.rootDir != null) {
+            File(config.rootDir)
+        } else {
+            Environment.getExternalStorageDirectory()
+        }
+        selected_files = ArrayList()
+        arr_dir_stack = ArrayList()
+        arr_files = ArrayList()
+        setUpDirectoryStackView()
+        setUpFilesView()
         if (allPermissionsGranted()) {
-            fetchDirectory(new DirectoryModel(
+            fetchDirectory(
+                DirectoryModel(
                     true,
-                    root_dir.getAbsolutePath(),
-                    root_dir.getName(),
+                    root_dir.absolutePath,
+                    root_dir.name,
                     root_dir.lastModified(),
-                    root_dir.listFiles() == null ? 0 : root_dir.listFiles().length
-            ));
+                    if (root_dir.listFiles() == null) 0 else root_dir.listFiles().size
+                )
+            )
         } else {
-            Log.e(TAG, "Storage permissions not granted. You have to implement it before starting the file picker");
-            finish();
+            Log.e(
+                TAG,
+                "Storage permissions not granted. You have to implement it before starting the file picker"
+            )
+            finish()
         }
-
-        filePickerBinding.fabSelect.setOnClickListener((v)->{
-            Intent intent = new Intent();
-            if(config.showOnlyDirectory()){
-                selected_files.clear();
-                selected_files.add(arr_dir_stack.get(arr_dir_stack.size()-1).getPath());
+        filePickerBinding.fabSelect.setOnClickListener { v: View? ->
+            val intent = Intent()
+            if (config.showOnlyDirectory()) {
+                selected_files.clear()
+                selected_files.add(arr_dir_stack[arr_dir_stack.size - 1].path)
             }
-            intent.putStringArrayListExtra("filePaths", selected_files);
-            setResult(config.getReqCode(), intent);
-            setResult(RESULT_OK, intent);
-            finish();
-        });
-
-        TypedValue typedValue = new TypedValue();
-        Resources.Theme theme = getTheme();
-        theme.resolveAttribute(R.attr.unicorn_fabColor, typedValue, true);
-        if(typedValue.data!=0){
-            filePickerBinding.fabSelect.setBackgroundTintList(ColorStateList.valueOf(typedValue.data));
-        }else{
-            filePickerBinding.fabSelect.setBackgroundTintList(ColorStateList.valueOf(getResources().getColor(R.color.unicorn_colorAccent)));
+            intent.putStringArrayListExtra("filePaths", selected_files)
+            setResult(config.reqCode, intent)
+            setResult(RESULT_OK, intent)
+            finish()
         }
-
+        val typedValue = TypedValue()
+        val theme = theme
+        theme.resolveAttribute(R.attr.unicorn_fabColor, typedValue, true)
+        if (typedValue.data != 0) {
+            filePickerBinding.fabSelect.backgroundTintList =
+                ColorStateList.valueOf(typedValue.data)
+        } else {
+            filePickerBinding.fabSelect.backgroundTintList =
+                ColorStateList.valueOf(resources.getColor(R.color.unicorn_md_theme_tertiary))
+        }
     }
 
-    private void setUpFilesView() {
-        LinearLayoutManager layoutManager = new LinearLayoutManager(FilePickerActivity.this);
-        filePickerBinding.rvFiles.setLayoutManager(layoutManager);
-        directoryAdapter = new DirectoryAdapter(FilePickerActivity.this, arr_files, false, new DirectoryAdapter.onFilesClickListener() {
-            @Override
-            public void onClicked(DirectoryModel model) {
-                fetchDirectory(model);
-            }
-
-            @Override
-            public void onFileSelected(DirectoryModel fileModel) {
-                if(config.isSelectMultiple()){
-                    if(selected_files.contains(fileModel.getPath())){
-                        selected_files.remove(fileModel.getPath());
-                    }else{
-                        selected_files.add(fileModel.getPath());
-                    }
-                }else{
-                    selected_files.clear();
-                    selected_files.add(fileModel.getPath());
+    private fun setUpFilesView() {
+        val layoutManager = LinearLayoutManager(this@FilePickerActivity)
+        filePickerBinding.rvFiles.layoutManager = layoutManager
+        directoryAdapter = DirectoryAdapter(
+            this@FilePickerActivity,
+            arr_files,
+            false,
+            object : onFilesClickListener {
+                override fun onClicked(model: DirectoryModel) {
+                    fetchDirectory(model)
                 }
-            }
-        });
-        filePickerBinding.rvFiles.setAdapter(directoryAdapter);
-        directoryAdapter.notifyDataSetChanged();
-        if(config.addItemDivider()){
-            filePickerBinding.rvFiles.addItemDecoration(new UnicornSimpleItemDecoration(FilePickerActivity.this));
+
+                override fun onFileSelected(fileModel: DirectoryModel) {
+                    if (config.isSelectMultiple) {
+                        if (selected_files.contains(fileModel.path)) {
+                            selected_files.remove(fileModel.path)
+                        } else {
+                            selected_files.add(fileModel.path)
+                        }
+                    } else {
+                        selected_files.clear()
+                        selected_files.add(fileModel.path)
+                    }
+                }
+            })
+        filePickerBinding.rvFiles.adapter = directoryAdapter
+        directoryAdapter.notifyDataSetChanged()
+        if (config.addItemDivider()) {
+            filePickerBinding.rvFiles.addItemDecoration(UnicornSimpleItemDecoration(this@FilePickerActivity))
         }
     }
 
-    private void setUpDirectoryStackView() {
-        LinearLayoutManager layoutManager = new LinearLayoutManager(FilePickerActivity.this, RecyclerView.HORIZONTAL, false);
-        filePickerBinding.rvDirPath.setLayoutManager(layoutManager);
-        stackAdapter = new DirectoryStackAdapter(FilePickerActivity.this, arr_dir_stack, model -> {
-            Log.e(TAG, model.toString());
-            arr_dir_stack = new ArrayList<>(arr_dir_stack.subList(0, arr_dir_stack.indexOf(model) + 1));
-            setUpDirectoryStackView();
-            fetchDirectory(arr_dir_stack.remove(arr_dir_stack.size() - 1));
-        });
-
-        filePickerBinding.rvDirPath.setAdapter(stackAdapter);
-        stackAdapter.notifyDataSetChanged();
+    private fun setUpDirectoryStackView() {
+        val layoutManager =
+            LinearLayoutManager(this@FilePickerActivity, RecyclerView.HORIZONTAL, false)
+        filePickerBinding.rvDirPath.layoutManager = layoutManager
+        stackAdapter =
+            DirectoryStackAdapter(this@FilePickerActivity, arr_dir_stack) { model: DirectoryModel ->
+                Log.e(TAG, model.toString())
+                arr_dir_stack =
+                    ArrayList(arr_dir_stack.subList(0, arr_dir_stack.indexOf(model) + 1))
+                setUpDirectoryStackView()
+                fetchDirectory(arr_dir_stack.removeAt(arr_dir_stack.size - 1))
+            }
+        filePickerBinding.rvDirPath.adapter = stackAdapter
+        stackAdapter.notifyDataSetChanged()
     }
 
     /**
      * Fetches list of files in a folder and filters files if filter present
      */
-    private void fetchDirectory(DirectoryModel model) {
-        filePickerBinding.rlProgress.setVisibility(View.VISIBLE);
-        selected_files.clear();
-
-        arr_files.clear();
-        File dir = new File(model.getPath());
-        File[] files_list = dir.listFiles();
+    private fun fetchDirectory(model: DirectoryModel) {
+        filePickerBinding.rlProgress.visibility = View.VISIBLE
+        selected_files.clear()
+        arr_files.clear()
+        val dir = File(model.path)
+        val files_list = dir.listFiles()
         if (files_list != null) {
-            for (File file : files_list) {
-                DirectoryModel directoryModel = new DirectoryModel();
-                directoryModel.setDirectory(file.isDirectory());
-                directoryModel.setName(file.getName());
-                directoryModel.setPath(file.getAbsolutePath());
-                directoryModel.setLast_modif_time(file.lastModified());
-
-                if (config.showHidden() || (!config.showHidden() && !file.isHidden())) {
-                    if (file.isDirectory()) {
-                        if (file.listFiles() != null)
-                            directoryModel.setNum_files(file.listFiles().length);
-                        arr_files.add(directoryModel);
+            for (file in files_list) {
+                val directoryModel = DirectoryModel()
+                directoryModel.isDirectory = file.isDirectory
+                directoryModel.name = file.name
+                directoryModel.path = file.absolutePath
+                directoryModel.last_modif_time = file.lastModified()
+                if (config.showHidden() || !config.showHidden() && !file.isHidden) {
+                    if (file.isDirectory) {
+                        if (file.listFiles() != null) directoryModel.num_files =
+                            file.listFiles().size
+                        arr_files.add(directoryModel)
                     } else {
-                        if(!config.showOnlyDirectory()){
+                        if (!config.showOnlyDirectory()) {
                             // Filter out files if filters specified
-                            if(filters!=null){
+                            if (filters != null) {
                                 try {
                                     // Extract the file extension
-                                    String fileName = file.getName();
-                                    String extension = fileName.substring(fileName.lastIndexOf("."));
-                                    for (String filter : filters) {
-                                        if (extension.toLowerCase().contains(filter)) {
-                                            arr_files.add(directoryModel);
+                                    val fileName = file.name
+                                    val extension = fileName.substring(fileName.lastIndexOf("."))
+                                    for (filter in filters) {
+                                        if (extension.lowercase(Locale.getDefault())
+                                                .contains(filter)
+                                        ) {
+                                            arr_files.add(directoryModel)
                                         }
                                     }
-                                } catch (Exception e) {
+                                } catch (e: Exception) {
 //                                Log.e(TAG, "Encountered a file without an extension: ", e);
                                 }
-                            }else{
-                                arr_files.add(directoryModel);
+                            } else {
+                                arr_files.add(directoryModel)
                             }
                         }
                     }
                 }
-
             }
-            Collections.sort(arr_files, new CustomFileComparator());
-
-            arr_dir_stack.add(model);
-            filePickerBinding.rvDirPath.scrollToPosition(arr_dir_stack.size() - 1);
-            filePickerBinding.toolbar.setTitle(model.getName());
+            Collections.sort(arr_files, CustomFileComparator())
+            arr_dir_stack.add(model)
+            filePickerBinding.rvDirPath.scrollToPosition(arr_dir_stack.size - 1)
+            filePickerBinding.toolbar.title = model.name
         }
-        if (arr_files.size() == 0) {
-            filePickerBinding.rlNoFiles.setVisibility(View.VISIBLE);
+        if (arr_files.size == 0) {
+            filePickerBinding.rlNoFiles.visibility = View.VISIBLE
         } else {
-            filePickerBinding.rlNoFiles.setVisibility(View.GONE);
+            filePickerBinding.rlNoFiles.visibility = View.GONE
         }
-        filePickerBinding.rlProgress.setVisibility(View.GONE);
-        stackAdapter.notifyDataSetChanged();
-        directoryAdapter.notifyDataSetChanged();
+        filePickerBinding.rlProgress.visibility = View.GONE
+        stackAdapter.notifyDataSetChanged()
+        directoryAdapter.notifyDataSetChanged()
     }
 
     // Custom Comparator to sort the list of files in lexicographical order
-    public static class CustomFileComparator implements Comparator<DirectoryModel> {
-        @Override
-        public int compare(DirectoryModel o1, DirectoryModel o2) {
-            if (o1.isDirectory() && o2.isDirectory()) {
-                return o1.getName().toLowerCase().compareTo(o2.getName().toLowerCase());
-            } else if (o1.isDirectory() && !o2.isDirectory()) {
-                return -1;
-            } else if (!o1.isDirectory() && o2.isDirectory()) {
-                return 1;
+    class CustomFileComparator : Comparator<DirectoryModel> {
+        override fun compare(o1: DirectoryModel, o2: DirectoryModel): Int {
+            return if (o1.isDirectory && o2.isDirectory) {
+                o1.name.lowercase(Locale.getDefault())
+                    .compareTo(o2.name.lowercase(Locale.getDefault()))
+            } else if (o1.isDirectory && !o2.isDirectory) {
+                -1
+            } else if (!o1.isDirectory && o2.isDirectory) {
+                1
             } else {
-                return o1.getName().toLowerCase().compareTo(o2.getName().toLowerCase());
+                o1.name.lowercase(Locale.getDefault())
+                    .compareTo(o2.name.lowercase(Locale.getDefault()))
             }
         }
     }
 
-
-    @Override
-    public boolean onCreateOptionsMenu(Menu menu) {
-        MenuInflater menuInflater = getMenuInflater();
-        menuInflater.inflate(R.menu.unicorn_menu_file_picker, menu);
-
-        MenuItem item_search = menu.findItem(R.id.action_search);
-
-        SearchView searchView = (SearchView) item_search.getActionView();
-        searchView.setImeOptions(EditorInfo.IME_ACTION_DONE);
-
-        searchView.setOnQueryTextListener(new SearchView.OnQueryTextListener() {
-            @Override
-            public boolean onQueryTextSubmit(String query) {
-                return false;
+    override fun onCreateOptionsMenu(menu: Menu): Boolean {
+        val menuInflater = menuInflater
+        menuInflater.inflate(R.menu.unicorn_menu_file_picker, menu)
+        val item_search = menu.findItem(R.id.action_search)
+        val searchView = item_search.actionView as SearchView
+        val searchText = searchView.findViewById<SearchAutoComplete>(R.id.search_src_text)
+        searchText.setHintTextColor(resources.getColor(R.color.unicorn_md_theme_outline))
+        searchText.setTextColor(resources.getColor(R.color.unicorn_md_theme_onSurface))
+        searchView.imeOptions = EditorInfo.IME_ACTION_DONE
+        searchView.setOnQueryTextListener(object : SearchView.OnQueryTextListener {
+            override fun onQueryTextSubmit(query: String): Boolean {
+                return false
             }
 
-            @Override
-            public boolean onQueryTextChange(String newText) {
-                directoryAdapter.getFilter().filter(newText);
-                return false;
+            override fun onQueryTextChange(newText: String): Boolean {
+                directoryAdapter.filter.filter(newText)
+                return false
             }
-        });
-        return true;
+        })
+        return true
     }
 
     /**
      * This method checks whether STORAGE permissions are granted or not
      */
-    private boolean allPermissionsGranted() {
-        for (String permission : REQUIRED_PERMISSIONS) {
-            if (ContextCompat.checkSelfPermission(FilePickerActivity.this, permission) != PackageManager.PERMISSION_GRANTED) {
-                return false;
-            }
+    private fun allPermissionsGranted(): Boolean {
+        var storagePermissionGranted = true
+        for (permission in REQUIRED_PERMISSIONS) {
+            storagePermissionGranted = storagePermissionGranted && ContextCompat.checkSelfPermission(
+                this@FilePickerActivity,
+                permission
+            ) != PackageManager.PERMISSION_GRANTED
         }
-        return true;
+
+        if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.R && !Environment.isExternalStorageManager()) {
+            return false
+        } else if (Build.VERSION.SDK_INT < Build.VERSION_CODES.R && !storagePermissionGranted) {
+            return false
+        }
+        return true
     }
 
-    @Override
-    public void onBackPressed() {
-        if (arr_dir_stack.size() > 1) {
+    override fun onBackPressed() {
+        if (arr_dir_stack.size > 1) {
             // pop off top value and display
-            arr_dir_stack.remove(arr_dir_stack.size() - 1);
-            DirectoryModel model = arr_dir_stack.remove(arr_dir_stack.size() - 1);
-            fetchDirectory(model);
+            arr_dir_stack.removeAt(arr_dir_stack.size - 1)
+            val model = arr_dir_stack.removeAt(arr_dir_stack.size - 1)
+            fetchDirectory(model)
         } else {
             // Nothing left in stack so exit
-            Intent intent = new Intent();
-            setResult(config.getReqCode(), intent);
-            setResult(RESULT_CANCELED, intent);
-            finish();
+            val intent = Intent()
+            setResult(config.reqCode, intent)
+            setResult(RESULT_CANCELED, intent)
+            finish()
         }
     }
 
-    @Override
-    public boolean onOptionsItemSelected(@NonNull MenuItem item) {
-        int id = item.getItemId();
+    override fun onOptionsItemSelected(item: MenuItem): Boolean {
+        val id = item.itemId
         if (id == android.R.id.home) {
-            onBackPressed();
+            onBackPressed()
         }
-        return true;
+        return true
+    }
+
+    companion object {
+        private const val TAG = "FilePickerActivity"
     }
 }

@@ -31,6 +31,7 @@ import java.util.StringTokenizer;
 import abhishekti7.unicorn.filepicker.UnicornFilePicker;
 import abhishekti7.unicorn.filepicker.storage.StorageUtils;
 import abhishekti7.unicorn.filepicker.utils.Constants;
+import abhishekti7.unicorn.filepicker.utils.PermissionHelper;
 import dev.abhishekti7.filepickerexample.databinding.ActivityMainBinding;
 
 public class MainActivity extends AppCompatActivity {
@@ -67,6 +68,7 @@ public class MainActivity extends AppCompatActivity {
         setContentView(view);
 
 
+        PermissionHelper.INSTANCE.requestAllFilesAccess(this);
         if (allPermissionsGranted()) {
             Toast.makeText(MainActivity.this, "Permissions granted by the user.", Toast.LENGTH_SHORT).show();
         } else {
@@ -93,7 +95,7 @@ public class MainActivity extends AppCompatActivity {
                     .showHiddenFiles(false)
                     .setFilters(new String[]{"pdf", "png", "jpg", "jpeg"})
                     .addItemDivider(true)
-                    .theme(R.style.UnicornFilePicker_Dracula)
+                    .theme(R.style.UnicornFilePicker_Default_AppTheme)
                     .build()
                     .forResult(Constants.REQ_UNICORN_FILE);
         });
@@ -106,7 +108,7 @@ public class MainActivity extends AppCompatActivity {
                     .showHiddenFiles(false)
                     .setFilters(new String[]{"pdf", "png", "jpg", "jpeg"})
                     .addItemDivider(true)
-                    .theme(R.style.UnicornFilePicker_Default)
+                    .theme(R.style.UnicornFilePicker_Default_AppTheme)
                     .build()
                     .forResult(Constants.REQ_UNICORN_FILE);
         });
@@ -119,7 +121,7 @@ public class MainActivity extends AppCompatActivity {
                     .showHiddenFiles(false)
                     .setFilters(new String[]{"pdf", "png", "jpg", "jpeg"})
                     .addItemDivider(true)
-                    .theme(R.style.Theme_CustomUnicorn)
+                    .theme(R.style.UnicornFilePicker_Default_AppTheme)
                     .build()
                     .forResult(Constants.REQ_UNICORN_FILE);
         });
@@ -150,6 +152,7 @@ public class MainActivity extends AppCompatActivity {
 
     @Override
     public void onRequestPermissionsResult(int requestCode, @NonNull String[] permissions, @NonNull int[] grantResults) {
+        super.onRequestPermissionsResult(requestCode, permissions, grantResults);
         if (requestCode == REQUEST_CODE_PERMISSIONS) {
             if (allPermissionsGranted()) {
                 Toast.makeText(MainActivity.this, "Permissions granted by the user.", Toast.LENGTH_SHORT).show();

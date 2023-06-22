@@ -7,5 +7,6 @@
         android:title="@string/unicorn_search"
         android:icon="@drawable/unicorn_ic_search"
         app:showAsAction="always"
+        app:iconTint="@color/unicorn_md_theme_onSurface"
         app:actionViewClass="androidx.appcompat.widget.SearchView"/>
 </menu>
