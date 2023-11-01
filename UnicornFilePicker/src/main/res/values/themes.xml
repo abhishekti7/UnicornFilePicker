@@ -1,0 +1,46 @@
+
+<resources>
+    <style name="UnicornFilePicker.Default.AppTheme" parent="Theme.Material3.Light.NoActionBar">
+        <item name="colorPrimary">@color/unicorn_md_theme_primary</item>
+        <item name="colorOnPrimary">@color/unicorn_md_theme_onPrimary</item>
+        <item name="colorPrimaryContainer">@color/unicorn_md_theme_primaryContainer</item>
+        <item name="colorOnPrimaryContainer">@color/unicorn_md_theme_onPrimaryContainer</item>
+        <item name="colorSecondary">@color/unicorn_md_theme_secondary</item>
+        <item name="colorOnSecondary">@color/unicorn_md_theme_onSecondary</item>
+        <item name="colorSecondaryContainer">@color/unicorn_md_theme_secondaryContainer</item>
+        <item name="colorOnSecondaryContainer">@color/unicorn_md_theme_onSecondaryContainer</item>
+        <item name="colorTertiary">@color/unicorn_md_theme_tertiary</item>
+        <item name="colorOnTertiary">@color/unicorn_md_theme_onTertiary</item>
+        <item name="colorTertiaryContainer">@color/unicorn_md_theme_tertiaryContainer</item>
+        <item name="colorOnTertiaryContainer">@color/unicorn_md_theme_onTertiaryContainer</item>
+        <item name="colorError">@color/unicorn_md_theme_error</item>
+        <item name="colorErrorContainer">@color/unicorn_md_theme_errorContainer</item>
+        <item name="colorOnError">@color/unicorn_md_theme_onError</item>
+        <item name="colorOnErrorContainer">@color/unicorn_md_theme_onErrorContainer</item>
+        <item name="android:colorBackground">@color/unicorn_md_theme_background</item>
+        <item name="colorOnBackground">@color/unicorn_md_theme_onBackground</item>
+        <item name="colorSurface">@color/unicorn_md_theme_surface</item>
+        <item name="colorOnSurface">@color/unicorn_md_theme_onSurface</item>
+        <item name="colorSurfaceVariant">@color/unicorn_md_theme_surfaceVariant</item>
+        <item name="colorOnSurfaceVariant">@color/unicorn_md_theme_onSurfaceVariant</item>
+        <item name="colorOutline">@color/unicorn_md_theme_outline</item>
+        <item name="colorOnSurfaceInverse">@color/unicorn_md_theme_inverseOnSurface</item>
+        <item name="colorSurfaceInverse">@color/unicorn_md_theme_inverseSurface</item>
+        <item name="colorPrimaryInverse">@color/unicorn_md_theme_inversePrimary</item>
+        <item name="materialCardViewStyle">@style/UnicornFilePicker.Default.Widget.App.CardView</item>
+        <item name="unicorn.primaryTextColor">@color/unicorn_md_theme_onSurface</item>
+        <item name="unicorn.colorAccent">@color/unicorn_md_theme_secondary</item>
+    </style>
+    <style name="UnicornFilePicker.Default.ShapeAppearance.App.MediumComponent" parent="ShapeAppearance.Material3.MediumComponent">
+        <item name="cornerSize">8dp</item>
+    </style>
+    <style name="UnicornFilePicker.Default.ThemeOverlay.App.Card" parent="">
+        <item name="colorSecondary">@color/unicorn_md_theme_secondaryContainer</item>
+        <item name="colorSurface">@color/unicorn_md_theme_surface</item>
+        <item name="colorOnSurfaceVariant">@color/unicorn_md_theme_onSurfaceVariant</item>
+    </style>
+    <style name="UnicornFilePicker.Default.Widget.App.CardView" parent="Widget.Material3.CardView.Elevated">
+        <item name="materialThemeOverlay">@style/UnicornFilePicker.Default.ThemeOverlay.App.Card</item>
+        <item name="shapeAppearance">@style/UnicornFilePicker.Default.ShapeAppearance.App.MediumComponent</item>
+    </style>
+</resources>

@@ -12,8 +12,8 @@
         android:roundIcon="@mipmap/ic_launcher_round"
         android:supportsRtl="true"
         android:requestLegacyExternalStorage="true"
-        android:theme="@style/Theme.FilePickerExample">
-        <activity android:name="dev.abhishekti7.filepickerexample.MainActivity">
+        android:theme="@style/UnicornFilePicker.Default.AppTheme">
+        <activity android:name="dev.abhishekti7.filepickerexample.MainActivity" android:exported="true">
             <intent-filter>
                 <action android:name="android.intent.action.MAIN" />
 

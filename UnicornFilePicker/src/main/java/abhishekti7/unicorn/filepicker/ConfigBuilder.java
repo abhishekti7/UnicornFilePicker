@@ -24,7 +24,7 @@ public final class ConfigBuilder {
     private boolean showOnlyDir = false;
 
     @StyleRes
-    private int themeId = R.style.UnicornFilePicker_Default;
+    private int themeId = R.style.UnicornFilePicker_Default_AppTheme;
 
     private final UnicornFilePicker unicornFilePicker;
     private ArrayList<String> extensionFilters;

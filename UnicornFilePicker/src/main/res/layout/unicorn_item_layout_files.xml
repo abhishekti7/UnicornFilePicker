@@ -7,15 +7,15 @@
     android:layout_height="wrap_content"
     android:minHeight="70dp">
 
-    <ImageView
+    <androidx.appcompat.widget.AppCompatImageView
         android:id="@+id/item_icon"
-        app:tint="?attr/unicorn.file.iconTint"
         android:layout_width="50dp"
         android:layout_height="30dp"
         android:layout_marginHorizontal="10dp"
         android:layout_marginVertical="10dp"
         android:layout_centerVertical="true"
         android:layout_alignParentStart="true"
+        app:tint="@color/unicorn_md_theme_onSurface"
         android:src="@drawable/unicorn_ic_file"/>
 
     <RelativeLayout
@@ -32,16 +32,16 @@
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
             android:textSize="16sp"
-            android:textColor="?attr/unicorn.file.heading"
             android:maxLines="1"
+            android:textColor="@color/unicorn_md_theme_onSurface"
             android:ellipsize="end"/>
 
         <TextView
             android:id="@+id/tv_date"
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
-            android:textColor="?attr/unicorn.file.subHeading"
             android:textSize="12sp"
+            android:textColor="@color/unicorn_md_theme_onSurface"
             android:layout_below="@id/tv_file_name"/>
     </RelativeLayout>
 

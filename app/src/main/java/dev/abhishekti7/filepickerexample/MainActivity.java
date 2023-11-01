@@ -10,14 +10,28 @@ import android.content.Intent;
 import android.content.pm.PackageManager;
 import android.os.Bundle;
 import android.os.Environment;
+import android.text.TextUtils;
 import android.util.Log;
 import android.view.View;
 import android.widget.Toast;
 
+import java.io.BufferedReader;
+import java.io.File;
+import java.io.FileNotFoundException;
+import java.io.FileReader;
+import java.io.IOException;
 import java.util.ArrayList;
+import java.util.Arrays;
+import java.util.HashMap;
+import java.util.HashSet;
+import java.util.List;
+import java.util.Map;
+import java.util.StringTokenizer;
 
 import abhishekti7.unicorn.filepicker.UnicornFilePicker;
+import abhishekti7.unicorn.filepicker.storage.StorageUtils;
 import abhishekti7.unicorn.filepicker.utils.Constants;
+import abhishekti7.unicorn.filepicker.utils.PermissionHelper;
 import dev.abhishekti7.filepickerexample.databinding.ActivityMainBinding;
 
 public class MainActivity extends AppCompatActivity {
@@ -29,7 +43,23 @@ public class MainActivity extends AppCompatActivity {
             "android.permission.WRITE_EXTERNAL_STORAGE",
             "android.permission.READ_EXTERNAL_STORAGE",
     };
-
+    public static final String SD_CARD = "sdCard";
+    public static final String EXTERNAL_SD_CARD = "externalSdCard";
+    private static final String ENV_SECONDARY_STORAGE = "SECONDARY_STORAGE";
+    public static Map<String, File> getAllStorageLocations() {
+        Map<String, File> storageLocations = new HashMap(10);
+        File sdCard = Environment.getExternalStorageDirectory();
+        storageLocations.put(SD_CARD, sdCard);
+        final String rawSecondaryStorage = System.getenv(ENV_SECONDARY_STORAGE);
+        if (!TextUtils.isEmpty(rawSecondaryStorage)) {
+            String[] externalCards = rawSecondaryStorage.split(":");
+            for (int i = 0; i < externalCards.length; i++) {
+                String path = externalCards[i];
+                storageLocations.put(EXTERNAL_SD_CARD + String.format(i == 0 ? "" : "_%d", i), new File(path));
+            }
+        }
+        return storageLocations;
+    }
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
@@ -37,11 +67,23 @@ public class MainActivity extends AppCompatActivity {
         View view = mainBinding.getRoot();
         setContentView(view);
 
+
+        PermissionHelper.INSTANCE.requestAllFilesAccess(this);
         if (allPermissionsGranted()) {
             Toast.makeText(MainActivity.this, "Permissions granted by the user.", Toast.LENGTH_SHORT).show();
         } else {
             ActivityCompat.requestPermissions(this, REQUIRED_PERMISSIONS, REQUEST_CODE_PERMISSIONS);
         }
+
+
+        Log.e(TAG, "GetAllLocations " + StorageUtils.INSTANCE.getStorageDirectories(this));
+        File[] f = ContextCompat.getExternalFilesDirs(getApplicationContext(),null);
+        for (int i=0;i< f.length;i++)
+        {
+            String path = f[i].getParent().replace("/Android/data/","").replace(getPackageName(),"");
+            Log.d("DIRS",path); //sdcard and internal and usb
+        }
+
 
 
         mainBinding.btnFilesDark.setOnClickListener((v)->{
@@ -53,7 +95,7 @@ public class MainActivity extends AppCompatActivity {
                     .showHiddenFiles(false)
                     .setFilters(new String[]{"pdf", "png", "jpg", "jpeg"})
                     .addItemDivider(true)
-                    .theme(R.style.UnicornFilePicker_Dracula)
+                    .theme(R.style.UnicornFilePicker_Default_AppTheme)
                     .build()
                     .forResult(Constants.REQ_UNICORN_FILE);
         });
@@ -66,7 +108,7 @@ public class MainActivity extends AppCompatActivity {
                     .showHiddenFiles(false)
                     .setFilters(new String[]{"pdf", "png", "jpg", "jpeg"})
                     .addItemDivider(true)
-                    .theme(R.style.UnicornFilePicker_Default)
+                    .theme(R.style.UnicornFilePicker_Default_AppTheme)
                     .build()
                     .forResult(Constants.REQ_UNICORN_FILE);
         });
@@ -79,7 +121,7 @@ public class MainActivity extends AppCompatActivity {
                     .showHiddenFiles(false)
                     .setFilters(new String[]{"pdf", "png", "jpg", "jpeg"})
                     .addItemDivider(true)
-                    .theme(R.style.Theme_CustomUnicorn)
+                    .theme(R.style.UnicornFilePicker_Default_AppTheme)
                     .build()
                     .forResult(Constants.REQ_UNICORN_FILE);
         });
@@ -110,6 +152,7 @@ public class MainActivity extends AppCompatActivity {
 
     @Override
     public void onRequestPermissionsResult(int requestCode, @NonNull String[] permissions, @NonNull int[] grantResults) {
+        super.onRequestPermissionsResult(requestCode, permissions, grantResults);
         if (requestCode == REQUEST_CODE_PERMISSIONS) {
             if (allPermissionsGranted()) {
                 Toast.makeText(MainActivity.this, "Permissions granted by the user.", Toast.LENGTH_SHORT).show();
@@ -118,4 +161,5 @@ public class MainActivity extends AppCompatActivity {
             }
         }
     }
+
 }

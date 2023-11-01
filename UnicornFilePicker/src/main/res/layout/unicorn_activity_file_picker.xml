@@ -2,40 +2,51 @@
 <androidx.coordinatorlayout.widget.CoordinatorLayout
     android:layout_width="match_parent"
     android:layout_height="match_parent"
-    android:background="?attr/unicorn.background"
     xmlns:android="http://schemas.android.com/apk/res/android"
     xmlns:app="http://schemas.android.com/apk/res-auto"
     xmlns:tools="http://schemas.android.com/tools"
+    android:background="@color/unicorn_md_theme_background"
     tools:context=".ui.FilePickerActivity">
 
     <com.google.android.material.appbar.AppBarLayout
         android:id="@+id/appBar"
         android:layout_width="match_parent"
-        android:background="?attr/unicorn.background"
         android:layout_height="?actionBarSize">
 
-        <androidx.appcompat.widget.Toolbar
+        <com.google.android.material.appbar.MaterialToolbar
             android:id="@+id/toolbar"
             android:layout_width="match_parent"
-            android:layout_height="wrap_content"/>
+            android:layout_height="wrap_content"
+            app:subtitleTextColor="@color/unicorn_md_theme_onSurface"
+            app:titleTextColor="@color/unicorn_md_theme_onSurface"/>
     </com.google.android.material.appbar.AppBarLayout>
 
 
     <androidx.constraintlayout.widget.ConstraintLayout
         android:layout_width="match_parent"
         android:layout_height="match_parent"
-        android:background="?attr/unicorn.background"
         android:layout_marginHorizontal="8dp"
         app:layout_behavior="com.google.android.material.appbar.AppBarLayout$ScrollingViewBehavior">
 
+        <Spinner
+            android:id="@+id/rv_storage_path"
+            android:layout_width="220dp"
+            android:layout_height="wrap_content"
+            android:paddingVertical="8dp"
+            app:layout_constraintEnd_toEndOf="parent"
+            app:layout_constraintHorizontal_bias="0.0"
+            app:layout_constraintStart_toStartOf="parent"
+            app:layout_constraintTop_toTopOf="parent" />
+
         <androidx.recyclerview.widget.RecyclerView
             android:id="@+id/rv_dir_path"
-            android:paddingVertical="8dp"
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
-            app:layout_constraintTop_toTopOf="parent"
+            android:paddingVertical="8dp"
+            android:paddingHorizontal="8dp"
+            app:layout_constraintEnd_toEndOf="parent"
             app:layout_constraintStart_toStartOf="parent"
-            app:layout_constraintEnd_toEndOf="parent"/>
+            app:layout_constraintTop_toBottomOf="@+id/rv_storage_path" />
 
         <RelativeLayout
             android:id="@+id/rl_progress"
@@ -50,7 +61,7 @@
                 android:layout_width="wrap_content"
                 android:layout_height="wrap_content"
                 android:layout_centerInParent="true"
-                android:progressTint="@color/unicorn_colorAccent"/>
+                android:progressTint="@color/unicorn_md_theme_primary"/>
         </RelativeLayout>
 
         <RelativeLayout
@@ -58,7 +69,6 @@
             android:layout_width="match_parent"
             android:layout_height="0dp"
             android:visibility="gone"
-            android:background="?attr/unicorn.background"
             app:layout_constraintTop_toBottomOf="@id/rv_dir_path"
             app:layout_constraintStart_toStartOf="parent"
             app:layout_constraintEnd_toEndOf="parent"
@@ -69,7 +79,8 @@
                 android:layout_height="wrap_content"
                 android:text="@string/unicorn_no_files"
                 android:textSize="14sp"
-                android:textColor="?attr/unicorn.secondaryTextColor"
+
+                android:textColor="@color/unicorn_md_theme_outline"
                 android:layout_centerInParent="true"/>
         </RelativeLayout>
         <androidx.recyclerview.widget.RecyclerView
@@ -89,8 +100,6 @@
         android:layout_height="wrap_content"
         android:layout_gravity="bottom|end"
         android:layout_margin="16dp"
-        app:borderWidth="0dp"
-        app:maxImageSize="32dp"
         android:src="@drawable/unicorn_ic_done"/>
 
 </androidx.coordinatorlayout.widget.CoordinatorLayout>

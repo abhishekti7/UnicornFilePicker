@@ -1,4 +1,12 @@
 <resources>
     <string name="unicorn_search">Search</string>
     <string name="unicorn_no_files">No files</string>
+    <string name="unicorn_root_directory">Root</string>
+    <string name="unicorn_storage_internal">Internal</string>
+    <string name="unicorn_storage_sd_card">SD Card</string>
+    <string name="unicorn_grant_all_files_permission">Our app needs permission to access all the files on your phone in order to load them. Once you press the "Grant" button, please select the option that says "Allow access to manage all files" on the next screen. This will enable the app to effectively manage and display all the files stored on your device. </string>
+    <string name="unicorn_grant_permission">Grant permission</string>
+    <string name="unicorn_grant">Grant</string>
+    <string name="unicorn_error_permission_not_granted">Permission not granted</string>
+    <string name="unicorn_cancel">Cancel</string>
 </resources>
